@@ -29,7 +29,7 @@ void ResourceManager::Init() {
 
     //shaderPrograms["default"] = std::move(ShaderProgram(readFile("res/defaultVER.txt"), readFile("res/defaultFRG.txt")));
 
-    shaderPrograms.emplace("default", ShaderProgram(readFile("res/defaultVER.txt"), readFile("res/defaultFRG.txt")));
+    shaderPrograms.emplace("default", ShaderProgram(readFile("res/defaultVER.glsl"), readFile("res/defaultFRG.glsl")));
 
 }
 
@@ -43,4 +43,8 @@ void ResourceManager::useProgram(const std::string &progName) {
         std::cerr << "USING INVALID PROGRAM ERROR" << std::endl;
         return;
     }
+}
+
+ GLuint &ResourceManager::getProgram(const std::string &progName) {
+    return shaderPrograms[progName].getProgram();
 }

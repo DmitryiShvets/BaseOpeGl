@@ -63,7 +63,7 @@ void ShaderProgram::use() {
 }
 
 ShaderProgram::~ShaderProgram() {
-    std::cout << "Destructor ShaderProgram (" << this << ") called " << std::endl;
+    // std::cout << "Destructor ShaderProgram (" << this << ") called " << std::endl;
     glDeleteProgram(hProgram);
 }
 
@@ -72,7 +72,7 @@ ShaderProgram::ShaderProgram(const std::string &vertexShader, const std::string 
 }
 
 ShaderProgram &ShaderProgram::operator=(ShaderProgram &&program) noexcept {
-   // std::cout << "Assignment-Move ShaderProgram (" << this << ") called " << std::endl;
+    // std::cout << "Assignment-Move ShaderProgram (" << this << ") called " << std::endl;
     if (this != &program) {
         glDeleteProgram(hProgram);
         hProgram = program.hProgram;
@@ -85,7 +85,7 @@ ShaderProgram &ShaderProgram::operator=(ShaderProgram &&program) noexcept {
 }
 
 ShaderProgram::ShaderProgram(ShaderProgram &&program) noexcept {
-   // std::cout << "Constructor-Move ShaderProgram (" << this << ") called " << std::endl;
+    // std::cout << "Constructor-Move ShaderProgram (" << this << ") called " << std::endl;
     hProgram = program.hProgram;
     compiled = program.compiled;
 
@@ -96,6 +96,10 @@ ShaderProgram::ShaderProgram(ShaderProgram &&program) noexcept {
 
 ShaderProgram::ShaderProgram() {
     std::cout << "Constructor-Default ShaderProgram (" << this << ") called " << std::endl;
+}
+
+ GLuint &ShaderProgram::getProgram() {
+    return hProgram;
 }
 
 std::ostream &operator<<(std::ostream &lhs, const GLType e) {

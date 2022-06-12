@@ -19,7 +19,9 @@ public:
 
     void Destroy();
 
-    void useProgram( const std::string& progName);
+    void useProgram(const std::string &progName);
+
+     GLuint &getProgram(const std::string &progName);
 
 private:
     std::map<std::string, ShaderProgram> shaderPrograms;

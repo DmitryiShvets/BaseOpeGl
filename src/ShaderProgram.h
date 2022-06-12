@@ -33,6 +33,8 @@ public:
 
     void use();
 
+     GLuint &getProgram();
+
     ~ShaderProgram();
 
     ShaderProgram();

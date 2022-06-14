@@ -15,7 +15,7 @@ public:
 
     Texture2D(const char *path);
 
-    virtual ~Texture2D();
+     ~Texture2D();
 
     Texture2D(Texture2D &) = delete;
 

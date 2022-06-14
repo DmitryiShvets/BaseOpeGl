@@ -12,8 +12,7 @@
 
 Texture2D::Texture2D() {}
 
-Texture2D::Texture2D(const char *path)
-{
+Texture2D::Texture2D(const char *path) {
     stbi_set_flip_vertically_on_load(true);
     unsigned char *image = stbi_load(path, &width, &height, &channel, 0);
     if (!image)throw std::invalid_argument(path);
@@ -39,15 +38,15 @@ Texture2D::Texture2D(const char *path)
             break;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(image);
     glBindTexture(GL_TEXTURE_2D, 0);
-    std::cout << "Texture" << path << " created"<< std::endl;
+    std::cout << "Texture " << path << " created" << std::endl;
 }
 
 Texture2D::~Texture2D() {
-    std::cout << "Texture " << " deleted"<< std::endl;
+    std::cout << "Texture " << " deleted" << std::endl;
     glDeleteTextures(1, &textureID);
     textureID = 0;
 }
@@ -79,5 +78,5 @@ Texture2D::Texture2D(Texture2D &&texture) noexcept {
 
 void Texture2D::bind() {
     if (textureID != 0) glBindTexture(GL_TEXTURE_2D, textureID);
-    else std::cerr << "Texture not init";
+    else std::cerr << " Texture not init " << std::endl;
 }

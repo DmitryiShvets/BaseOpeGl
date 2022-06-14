@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 #include <sstream>
 #include <string>
+#include <glm/mat4x4.hpp>
 
 class GLType {
 
@@ -33,7 +34,13 @@ public:
 
     void use();
 
-     GLuint &getProgram();
+    GLuint &getUintProgram();
+
+    void setUniform(const std::string &uniformName, const glm::mat4 &matrixValue);
+
+    void setUniform(const std::string &uniformName, int value);
+
+    void setUniform(const std::string &uniformName, const glm::vec4 &vec4Value);
 
     ~ShaderProgram();
 

@@ -8,10 +8,11 @@
 #include <string>
 #include <map>
 #include "ShaderProgram.h"
+#include "Texture2D.h"
 
 class ResourceManager {
 public:
-    ResourceManager();
+    static ResourceManager &getInstance();
 
     ~ResourceManager();
 
@@ -21,10 +22,24 @@ public:
 
     void useProgram(const std::string &progName);
 
-    GLuint &getProgram(const std::string &progName);
+    ShaderProgram &getProgram(const std::string &progName);
+
+    Texture2D &getTexture(const std::string &textureName);
+
 
 private:
+    ResourceManager();
+
+    ResourceManager(ResourceManager &) = delete;
+
+    ResourceManager &operator=(const ResourceManager &) = delete;
+
+    ResourceManager &operator=(ResourceManager &&program) = delete;
+
+    ResourceManager(ResourceManager &&program) = delete;
+
     std::map<std::string, ShaderProgram> shaderPrograms;
+    std::map<std::string, Texture2D> textures;
 };
 
 

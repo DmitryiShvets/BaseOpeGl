@@ -5,6 +5,7 @@
 #include "ShaderProgram.h"
 
 #include <iostream>
+#include <glm/gtc/type_ptr.hpp>
 
 ShaderProgram::ShaderProgram(const char *vertexShader, const char *fragmentShader) {
     //std::cout << "Constructor ShaderProgram (" << this << ") called " << std::endl;
@@ -99,8 +100,20 @@ ShaderProgram::ShaderProgram() {
     std::cout << "Constructor-Default ShaderProgram (" << this << ") called " << std::endl;
 }
 
-GLuint &ShaderProgram::getProgram() {
+GLuint &ShaderProgram::getUintProgram() {
     return hProgram;
+}
+
+void ShaderProgram::setUniform(const std::string &uniformName, const glm::mat4 &matrixValue) {
+    glUniformMatrix4fv(glGetUniformLocation(hProgram, uniformName.c_str()), 1, GL_FALSE, glm::value_ptr(matrixValue));
+}
+
+void ShaderProgram::setUniform(const std::string &uniformName, const glm::vec4 &vec4Value) {
+    glUniform4f(glGetUniformLocation(hProgram, uniformName.c_str()), vec4Value.x, vec4Value.y, vec4Value.z, vec4Value.w);
+}
+
+void ShaderProgram::setUniform(const std::string &uniformName, int value) {
+    glUniform1i(glGetUniformLocation(hProgram, uniformName.c_str()), value);
 }
 
 std::ostream &operator<<(std::ostream &lhs, const GLType e) {

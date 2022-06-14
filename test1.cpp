@@ -2,6 +2,7 @@
 
 // GLEW
 #define GLEW_STATIC
+
 #include <GL/glew.h>
 
 // GLFW
@@ -11,13 +12,15 @@
 #include "src/ShaderProgram.h"
 #include "src/ResourceManager.h"
 #include "src/Texture2D.h"
-
+#include "src/Sprite2D.h"
 #include <glm/vec2.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 // Function prototypes
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
 // Window dimensions
-glm::ivec2 windowSize(800,600);
+glm::ivec2 windowSize(800, 600);
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 // Shaders
@@ -33,7 +36,8 @@ const GLuint WIDTH = 800, HEIGHT = 600;
 int main() {
 
     std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
-    ResourceManager resourceManager;
+
+    ResourceManager &resourceManager = ResourceManager::getInstance();
     // Init GLFW
     glfwInit();
 
@@ -106,7 +110,16 @@ int main() {
 
     glBindVertexArray(0);
     const char *path = "awesomeface.png";
-    Texture2D texture(path);
+    Texture2D &texture = resourceManager.getTexture("default");
+
+    glm::mat4 projectionMatrix = glm::ortho(0.0f, static_cast<float>(windowSize.x), 0.0f, static_cast<float>(windowSize.y), -100.f, 100.f);
+    Sprite2D sprite2D("defaultSprite", "defaultSprite", glm::vec2(10.0f, 10.0f), glm::vec2(100.0f, 100.0f), 0);
+
+    resourceManager.getProgram("defaultSprite").use();
+    resourceManager.getProgram("defaultSprite").setUniform("ourTexture", 0);
+    resourceManager.getProgram("defaultSprite").setUniform("projectionMatrix", projectionMatrix);
+    glUseProgram(0);
+
 
     // Uncommenting this call will result in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -117,33 +130,25 @@ int main() {
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
         glfwPollEvents();
 
-        // Render
-        // Clear the colorbuffer
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Draw our first triangle
 
-        //  glUseProgram(shaderProgram);
-        // shaderProgram.use();
-
-        resourceManager.useProgram("default");
-
-        GLfloat timeValue = glfwGetTime();
-        GLfloat greenValue = (std::sin(timeValue) / 2) + 0.5;
-
-        GLint vertexColorLocation = glGetUniformLocation(resourceManager.getProgram("default"), "ourColor");
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-
+        resourceManager.getProgram("default").use();
         glActiveTexture(GL_TEXTURE0);
-        //  glBindTexture(GL_TEXTURE_2D, texture);
         texture.bind();
-        glUniform1i(glGetUniformLocation(resourceManager.getProgram("default"), "ourTexture"), 0);
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glUseProgram(0);
+
+
+        sprite2D.render();
+
 
         // Swap the screen buffers
         glfwSwapBuffers(window);

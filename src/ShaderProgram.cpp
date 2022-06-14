@@ -65,6 +65,7 @@ void ShaderProgram::use() {
 ShaderProgram::~ShaderProgram() {
     // std::cout << "Destructor ShaderProgram (" << this << ") called " << std::endl;
     glDeleteProgram(hProgram);
+    hProgram = 0;
 }
 
 ShaderProgram::ShaderProgram(const std::string &vertexShader, const std::string &fragmentShader) : ShaderProgram(vertexShader.c_str(),
@@ -98,7 +99,7 @@ ShaderProgram::ShaderProgram() {
     std::cout << "Constructor-Default ShaderProgram (" << this << ") called " << std::endl;
 }
 
- GLuint &ShaderProgram::getProgram() {
+GLuint &ShaderProgram::getProgram() {
     return hProgram;
 }
 

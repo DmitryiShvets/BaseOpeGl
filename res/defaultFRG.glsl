@@ -1,11 +1,12 @@
 #version 330 core
 
 in vec4 vertexColor;
+in vec2 TexCoord;
 out vec4 color;
 
 //uniform vec4 ourColor;// Мы устанавливаем значение этой переменной в коде OpenGL.
-
+uniform sampler2D ourTexture;
 void main()
 {
-    color = vertexColor;
+    color =  texture(ourTexture, TexCoord)*vertexColor;
 }

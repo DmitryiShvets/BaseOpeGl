@@ -12,10 +12,11 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(glfw)
+add_subdirectory(glm)
 
-add_executable(${PROJECT_NAME} test1.cpp src/ShaderProgram.cpp src/ShaderProgram.h src/ResourceManager.cpp src/ResourceManager.h)
+add_executable(${PROJECT_NAME} test1.cpp src/ShaderProgram.cpp src/ShaderProgram.h src/ResourceManager.cpp src/ResourceManager.h src/stb_image.h src/Texture2D.cpp src/Texture2D.h)
 
-target_link_libraries(${PROJECT_NAME} glfw libopengl32.a glew32.lib)
+target_link_libraries(${PROJECT_NAME} glfw glm libopengl32.a glew32.lib)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)
 

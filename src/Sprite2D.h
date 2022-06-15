@@ -8,20 +8,28 @@
 #include "Object2D.h"
 #include <GL/glew.h>
 #include <string>
-#include "ResourceManager.h"
+
+#include "MultiTexture2D.h"
+#include "ShaderProgram.h"
+
 
 class Sprite2D : public Object2D {
 public:
-    Sprite2D(const std::string &textureName, const std::string &programName, const glm::vec2 &position, const glm::vec2 &size, float rotation, ResourceManager &manager = ResourceManager::getInstance());
+    //Sprite2D(const Texture2D &texture, const ShaderProgram &programName, const glm::vec2 &position, const glm::vec2 &size, float rotation);
 
-    void render();
+    Sprite2D(const glm::vec2 &mPosition, const glm::vec2 &mSize, float mRotation, Texture2D *mTexture, ShaderProgram *mProgram);
+
+    Sprite2D(const glm::vec2 &mPosition, const glm::vec2 &mSize, float mRotation, MultiTexture2D *mTexture, ShaderProgram *mProgram,const std::string &subTexName="default");
 
     virtual ~Sprite2D();
 
+    void render();
+
+
 private:
-    std::string mTextureName;
-    std::string mProgramName;
-    ResourceManager &resourceManager;
+    Texture2D *mTexture;
+    ShaderProgram *mProgram;
+    //  ResourceManager &resourceManager;
     GLuint mVAO;
     GLuint mVerCoordVBO;
     GLuint mVerColorVBO;

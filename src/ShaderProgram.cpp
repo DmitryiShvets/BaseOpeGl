@@ -96,9 +96,6 @@ ShaderProgram::ShaderProgram(ShaderProgram &&program) noexcept {
 
 }
 
-ShaderProgram::ShaderProgram() {
-    std::cout << "Constructor-Default ShaderProgram (" << this << ") called " << std::endl;
-}
 
 GLuint &ShaderProgram::getUintProgram() {
     return hProgram;

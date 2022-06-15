@@ -44,7 +44,7 @@ public:
 
     ~ShaderProgram();
 
-    ShaderProgram();
+    ShaderProgram() = delete;
 
     ShaderProgram(ShaderProgram &) = delete;
 

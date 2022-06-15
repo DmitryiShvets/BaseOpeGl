@@ -9,6 +9,7 @@
 #include <map>
 #include "ShaderProgram.h"
 #include "Texture2D.h"
+#include "MultiTexture2D.h"
 
 class ResourceManager {
 public:
@@ -20,11 +21,11 @@ public:
 
     void Destroy();
 
-    void useProgram(const std::string &progName);
-
     ShaderProgram &getProgram(const std::string &progName);
 
     Texture2D &getTexture(const std::string &textureName);
+
+    MultiTexture2D &getMultiTexture(const std::string &textureName);
 
 
 private:
@@ -40,6 +41,7 @@ private:
 
     std::map<std::string, ShaderProgram> shaderPrograms;
     std::map<std::string, Texture2D> textures;
+    std::map<std::string, MultiTexture2D> mMulTextures;
 };
 
 

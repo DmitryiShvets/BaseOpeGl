@@ -8,28 +8,32 @@
 #include <GL/glew.h>
 
 
-
 class Texture2D {
 public:
-    Texture2D();
 
     Texture2D(const char *path);
 
-     ~Texture2D();
+    ~Texture2D();
+
+    Texture2D() = delete;
 
     Texture2D(Texture2D &) = delete;
 
     Texture2D &operator=(const Texture2D &) = delete;
 
-    Texture2D &operator=(Texture2D &&program) noexcept;
+    Texture2D &operator=(Texture2D &&texture2D) noexcept;
 
-    Texture2D(Texture2D &&program) noexcept;
+    Texture2D(Texture2D &&texture2D) noexcept;
 
     void bind();
 
+    int width();
+
+    int height();
+
 public:
-    int width = 0;
-    int height = 0;
+    int mWidth = 0;
+    int mHeight = 0;
     int channel = 0;
     GLenum format;
     GLuint textureID = 0;

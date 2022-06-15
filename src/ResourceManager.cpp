@@ -33,25 +33,25 @@ void ResourceManager::Init() {
     textures.emplace("default", Texture2D("awesomeface.png"));
     textures.emplace("defaultSprite", Texture2D("image.png"));
 
+    mMulTextures.emplace("defaultSprite", MultiTexture2D("atlas.png", {"1", "2", "3", "4", "5"}, 200, 150));
+
 }
 
 void ResourceManager::Destroy() {
     //std::cout << "Destructor ResourceManager (" << this << ") called " << std::endl;
     shaderPrograms.clear();
     textures.clear();
+    mMulTextures.clear();
 }
 
-void ResourceManager::useProgram(const std::string &progName) {
-    if (shaderPrograms.contains(progName) && shaderPrograms[progName].isCompiled())shaderPrograms[progName].use();
-    else {
-        std::cerr << "USING INVALID PROGRAM ERROR" << std::endl;
-        return;
-    }
-}
 
 ShaderProgram &ResourceManager::getProgram(const std::string &progName) {
-    return shaderPrograms[progName];
-
+    //return shaderPrograms[progName];
+    auto it = shaderPrograms.find(progName);
+    if (it != shaderPrograms.end()) {
+        return it->second;
+    }
+    return shaderPrograms.find("default")->second;
 }
 
 ResourceManager &ResourceManager::getInstance() {
@@ -61,5 +61,19 @@ ResourceManager &ResourceManager::getInstance() {
 }
 
 Texture2D &ResourceManager::getTexture(const std::string &textureName) {
-    return textures[textureName];
+    // return textures[textureName];
+    auto it = textures.find(textureName);
+    if (it != textures.end()) {
+        return it->second;
+    }
+    return textures.find("default")->second;
+}
+
+MultiTexture2D &ResourceManager::getMultiTexture(const std::string &textureName) {
+    // return mMulTextures[textureName];
+    auto it = mMulTextures.find(textureName);
+    if (it != mMulTextures.end()) {
+        return it->second;
+    }
+    return mMulTextures.find("defaultSprite")->second;
 }

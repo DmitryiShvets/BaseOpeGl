@@ -13,8 +13,10 @@
 #include "src/ResourceManager.h"
 #include "src/Texture2D.h"
 #include "src/Sprite2D.h"
+#include "src/SpriteAnimator.h"
 #include <glm/vec2.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <chrono>
 
 // Function prototypes
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
@@ -116,18 +118,25 @@ int main() {
     //  Sprite2D sprite2D("defaultSprite", "defaultSprite", glm::vec2(10.0f, 10.0f), glm::vec2(100.0f, 100.0f), 0);
 //    Sprite2D sprite2D(glm::vec2(10.0f, 10.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager.getTexture("defaultSprite"),
 //                       &resourceManager.getProgram("defaultSprite"));
-    Sprite2D sprite2D1( &resourceManager.getMultiTexture("defaultSprite"),
-                       &resourceManager.getProgram("defaultSprite"), 2);
+    Sprite2D sprite2D1(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager.getMultiTexture("defaultSprite"),
+                       &resourceManager.getProgram("defaultSprite"), 1);
     resourceManager.getProgram("defaultSprite").use();
     resourceManager.getProgram("defaultSprite").setUniform("ourTexture", 0);
     resourceManager.getProgram("defaultSprite").setUniform("projectionMatrix", projectionMatrix);
     glUseProgram(0);
+
+    sprite2D1.setSize(glm::vec2(200.0f, 200.0f));
+
+    SpriteAnimator spriteAnimator(&sprite2D1, 1, 3, true);
 
 
     // Uncommenting this call will result in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     double lastTime = glfwGetTime();
     int nbFrames = 0;
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     // Game loop
     while (!glfwWindowShouldClose(window)) {
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
@@ -149,11 +158,17 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
 
-       sprite2D1.render(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), -30, 4);
+        auto end = std::chrono::high_resolution_clock::now();
 
+        auto delta = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+        start = end;
+        spriteAnimator.update(delta);
+
+        sprite2D1.render();
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
+
         double currentTime = glfwGetTime();
         nbFrames++;
         if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1 sec ago

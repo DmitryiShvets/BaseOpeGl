@@ -33,7 +33,7 @@ void ResourceManager::Init() {
     textures.emplace("default", Texture2D("awesomeface.png"));
     textures.emplace("defaultSprite", Texture2D("image.png"));
 
-    mMulTextures.emplace("defaultSprite", MultiTexture2D("atlas.png", {"1", "2", "3", "4", "5"}, 200, 150));
+    mMulTextures.emplace("defaultSprite", MultiTexture2D("atlas.png", {1, 2, 3, 4, 5}, 200, 150));
 
 }
 

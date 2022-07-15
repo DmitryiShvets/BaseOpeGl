@@ -6,7 +6,9 @@
 #define BASEOPEGL_TEXTURE2D_H
 
 #include <GL/glew.h>
+#include <string>
 
+#include "SubTexture2D.h"
 
 class Texture2D {
 public:
@@ -30,6 +32,8 @@ public:
     int width();
 
     int height();
+
+    virtual const SubTexture2D &getSubTexture(const size_t &subTexName);
 
 public:
     int mWidth = 0;

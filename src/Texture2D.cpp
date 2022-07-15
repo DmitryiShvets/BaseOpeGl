@@ -11,6 +11,7 @@
 #include "stb_image.h"
 
 
+
 Texture2D::Texture2D(const char *path) {
     stbi_set_flip_vertically_on_load(true);
     unsigned char *image = stbi_load(path, &mWidth, &mHeight, &channel, 0);
@@ -88,4 +89,9 @@ int Texture2D::width() {
 
 int Texture2D::height() {
     return mHeight;
+}
+
+const SubTexture2D &Texture2D::getSubTexture(const size_t &subTexName) {
+    const static SubTexture2D defaultSubTexture;
+    return defaultSubTexture;
 }

@@ -11,20 +11,11 @@
 #include <string>
 #include <vector>
 
-class SubTexture2D {
-public:
-    SubTexture2D(const glm::vec2 &leftBottom, const glm::vec2 &rightTop);
 
-    SubTexture2D();
-
-    glm::vec2 leftBottom;
-    glm::vec2 rightTop;
-
-};
 
 class MultiTexture2D : public Texture2D {
 public:
-    MultiTexture2D(const char *path, const std::vector<std::string> &subTexNames, unsigned int subTexWidth = 0, unsigned int subTexHeight = 0);
+    MultiTexture2D(const char *path, const std::vector<size_t> &subTexNames, unsigned int subTexWidth = 0, unsigned int subTexHeight = 0);
 
     virtual ~MultiTexture2D();
 
@@ -38,13 +29,13 @@ public:
 
     MultiTexture2D(MultiTexture2D &&texture2D) noexcept;
 
-    const SubTexture2D &getSubTexture(const std::string &subTexName);
+    const SubTexture2D &getSubTexture(const size_t &subTexName) override;
 
 private:
 
-    void addSubTexture(const std::string &subTexName, const glm::vec2 &leftBottom, const glm::vec2 &rightTop);
+    void addSubTexture(const size_t &subTexName, const glm::vec2 &leftBottom, const glm::vec2 &rightTop);
 
-    std::map<std::string, SubTexture2D> mSubTexturesMap;
+    std::map<size_t, SubTexture2D> mSubTexturesMap;
 };
 
 

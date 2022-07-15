@@ -116,8 +116,8 @@ int main() {
     //  Sprite2D sprite2D("defaultSprite", "defaultSprite", glm::vec2(10.0f, 10.0f), glm::vec2(100.0f, 100.0f), 0);
 //    Sprite2D sprite2D(glm::vec2(10.0f, 10.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager.getTexture("defaultSprite"),
 //                       &resourceManager.getProgram("defaultSprite"));
-    Sprite2D sprite2D1(glm::vec2(10.0f, 10.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager.getMultiTexture("defaultSprite"),
-                       &resourceManager.getProgram("defaultSprite"),"3");
+    Sprite2D sprite2D1( &resourceManager.getMultiTexture("defaultSprite"),
+                       &resourceManager.getProgram("defaultSprite"), 2);
     resourceManager.getProgram("defaultSprite").use();
     resourceManager.getProgram("defaultSprite").setUniform("ourTexture", 0);
     resourceManager.getProgram("defaultSprite").setUniform("projectionMatrix", projectionMatrix);
@@ -149,8 +149,7 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
 
-
-        sprite2D1.render();
+       sprite2D1.render(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), -30, 4);
 
 
         // Swap the screen buffers

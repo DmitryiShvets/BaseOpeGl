@@ -5,7 +5,7 @@
 #ifndef BASEOPEGL_SPRITE2D_H
 #define BASEOPEGL_SPRITE2D_H
 
-#include "Object2D.h"
+
 #include <GL/glew.h>
 #include <string>
 
@@ -13,18 +13,17 @@
 #include "ShaderProgram.h"
 
 
-class Sprite2D : public Object2D {
+class Sprite2D  {
 public:
     //Sprite2D(const Texture2D &texture, const ShaderProgram &programName, const glm::vec2 &position, const glm::vec2 &size, float rotation);
 
-    Sprite2D(const glm::vec2 &mPosition, const glm::vec2 &mSize, float mRotation, Texture2D *mTexture, ShaderProgram *mProgram);
+    Sprite2D(Texture2D *texture, ShaderProgram *program);
 
-    Sprite2D(const glm::vec2 &mPosition, const glm::vec2 &mSize, float mRotation, MultiTexture2D *mTexture, ShaderProgram *mProgram,const std::string &subTexName="default");
+    Sprite2D( MultiTexture2D *texture, ShaderProgram *program,const size_t &subTexName=1);
+
+    void render(const glm::vec2 &position, const glm::vec2 &size, float rotation,const size_t frameId);
 
     virtual ~Sprite2D();
-
-    void render();
-
 
 private:
     Texture2D *mTexture;
@@ -33,7 +32,7 @@ private:
     GLuint mVAO;
     GLuint mVerCoordVBO;
     GLuint mVerColorVBO;
-
+    size_t mLastFrameId;
 
 };
 

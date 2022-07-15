@@ -3,13 +3,10 @@
 //
 
 #include "MultiTexture2D.h"
+#include "SubTexture2D.h"
 #include <iostream>
 
-SubTexture2D::SubTexture2D(const glm::vec2 &leftBottom, const glm::vec2 &rightTop) : leftBottom(leftBottom), rightTop(rightTop) {}
-
-SubTexture2D::SubTexture2D() : leftBottom(0.0f), rightTop(1.0f) {}
-
-MultiTexture2D::MultiTexture2D(const char *path, const std::vector<std::string> &subTexNames, unsigned int subTexWidth, unsigned int subTexHeight) : Texture2D(
+MultiTexture2D::MultiTexture2D(const char *path, const std::vector<size_t> &subTexNames, unsigned int subTexWidth, unsigned int subTexHeight) : Texture2D(
         path) {
     unsigned int offsetX = 0;
     unsigned int offsetY = 0;
@@ -27,11 +24,11 @@ MultiTexture2D::MultiTexture2D(const char *path, const std::vector<std::string> 
   //  std::cout << "Texture MULTI (" << this << ") " << path << " created" << std::endl;
 }
 
-void MultiTexture2D::addSubTexture(const std::string &subTexName, const glm::vec2 &leftBottom, const glm::vec2 &rightTop) {
+void MultiTexture2D::addSubTexture(const size_t &subTexName, const glm::vec2 &leftBottom, const glm::vec2 &rightTop) {
     mSubTexturesMap.emplace(subTexName, SubTexture2D(leftBottom, rightTop));
 }
 
-const SubTexture2D &MultiTexture2D::getSubTexture(const std::string &subTexName) {
+const SubTexture2D &MultiTexture2D::getSubTexture(const size_t &subTexName) {
 
     auto it = mSubTexturesMap.find(subTexName);
     if (it != mSubTexturesMap.end()) {

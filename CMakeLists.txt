@@ -14,7 +14,7 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(glfw)
 add_subdirectory(glm)
 
-add_executable(${PROJECT_NAME} test1.cpp src/ShaderProgram.cpp src/ShaderProgram.h src/ResourceManager.cpp src/ResourceManager.h src/stb_image.h src/Texture2D.cpp src/Texture2D.h src/Sprite2D.cpp src/Sprite2D.h src/MultiTexture2D.cpp src/MultiTexture2D.h src/SubTexture2D.cpp src/SubTexture2D.h src/Object2D.cpp src/Object2D.h src/SpriteAnimator.cpp src/SpriteAnimator.h)
+add_executable(${PROJECT_NAME} test1.cpp src/Core/ShaderProgram.cpp src/Core/ShaderProgram.h src/Core/ResourceManager.cpp src/Core/ResourceManager.h src/stb_image.h src/Core/Texture2D.cpp src/Core/Texture2D.h src/Core/Sprite2D.cpp src/Core/Sprite2D.h src/Core/MultiTexture2D.cpp src/Core/MultiTexture2D.h src/Core/SubTexture2D.cpp src/Core/SubTexture2D.h src/Core/Object2D.cpp src/Core/Object2D.h src/Core/SpriteAnimator.cpp src/Core/SpriteAnimator.h src/Game/Game.cpp src/Game/Game.h)
 
 target_link_libraries(${PROJECT_NAME} glfw glm libopengl32.a glew32.lib)
 

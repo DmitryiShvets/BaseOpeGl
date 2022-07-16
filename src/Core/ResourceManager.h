@@ -10,6 +10,7 @@
 #include "ShaderProgram.h"
 #include "Texture2D.h"
 #include "MultiTexture2D.h"
+#include "Sprite2D.h"
 
 class ResourceManager {
 public:
@@ -27,7 +28,9 @@ public:
 
     MultiTexture2D &getMultiTexture(const std::string &textureName);
 
+    Sprite2D &getSprite(const std::string &textureName);
 
+    std::map<std::string, Sprite2D> mSprites;
 private:
     ResourceManager();
 
@@ -42,6 +45,7 @@ private:
     std::map<std::string, ShaderProgram> shaderPrograms;
     std::map<std::string, Texture2D> textures;
     std::map<std::string, MultiTexture2D> mMulTextures;
+
 };
 
 

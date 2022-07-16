@@ -17,3 +17,17 @@ void Object2D::setSize(const glm::vec2 &size) {
 void Object2D::setRotation(float angle) {
     mRotation = angle;
 }
+
+glm::vec2 Object2D::position() {
+    return mPosition;
+}
+
+glm::vec2 Object2D::size() {
+    return mSize;
+}
+
+float Object2D::rotation() {
+    return mRotation;
+}
+
+

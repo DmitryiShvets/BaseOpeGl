@@ -9,37 +9,27 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 
-#include "src/ShaderProgram.h"
-#include "src/ResourceManager.h"
-#include "src/Texture2D.h"
-#include "src/Sprite2D.h"
-#include "src/SpriteAnimator.h"
+#include "src/Core/Texture2D.h"
+
 #include <glm/vec2.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <chrono>
+#include "src/Game/Game.h"
 
 // Function prototypes
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
+
 // Window dimensions
 glm::ivec2 windowSize(800, 600);
-const GLuint WIDTH = 800, HEIGHT = 600;
 
-// Shaders
-//const GLchar *vertexShaderSource = "#version 330 core\n"
-//                                   "layout (location = 0) in vec3 position;\n"
-//                                   "void main()\n"
-//                                   "{\n"
-//                                   "gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-//                                   "}\0";
-//const GLchar *fragmentShaderSource = "#version 330 core \n out vec4 color; void main() { color = vec4(1.0f, 0.5f, 0.2f, 1.0f);}";
 
 // The MAIN function, from here we start the application and run the game loop
 int main() {
 
     std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 
-    ResourceManager &resourceManager = ResourceManager::getInstance();
+    Game game(windowSize);
     // Init GLFW
     glfwInit();
 
@@ -55,23 +45,18 @@ int main() {
 
     // Set the required callback functions
     glfwSetKeyCallback(window, key_callback);
-
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
     // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
     glewExperimental = GL_TRUE;
     // Initialize GLEW to setup the OpenGL Function pointers
     glewInit();
-    resourceManager.Init();
+
+    game.init();
 
     // Define the viewport dimensions
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
-
-    // ShaderProgram shaderProgram(vertexShaderSource, fragmentShaderSource);
-    // if (!shaderProgram.isCompiled())return -1;
-
-
-
 
     GLfloat vertices[] = {
             0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top Right
@@ -111,23 +96,10 @@ int main() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glBindVertexArray(0);
-    const char *path = "awesomeface.png";
-    Texture2D &texture = resourceManager.getTexture("default");
 
-    glm::mat4 projectionMatrix = glm::ortho(0.0f, static_cast<float>(windowSize.x), 0.0f, static_cast<float>(windowSize.y), -100.f, 100.f);
-    //  Sprite2D sprite2D("defaultSprite", "defaultSprite", glm::vec2(10.0f, 10.0f), glm::vec2(100.0f, 100.0f), 0);
-//    Sprite2D sprite2D(glm::vec2(10.0f, 10.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager.getTexture("defaultSprite"),
-//                       &resourceManager.getProgram("defaultSprite"));
-    Sprite2D sprite2D1(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager.getMultiTexture("defaultSprite"),
-                       &resourceManager.getProgram("defaultSprite"), 1);
-    resourceManager.getProgram("defaultSprite").use();
-    resourceManager.getProgram("defaultSprite").setUniform("ourTexture", 0);
-    resourceManager.getProgram("defaultSprite").setUniform("projectionMatrix", projectionMatrix);
-    glUseProgram(0);
 
-    sprite2D1.setSize(glm::vec2(200.0f, 200.0f));
+    Texture2D &texture = game.resourceManager.getTexture("default");
 
-    SpriteAnimator spriteAnimator(&sprite2D1, 1, 3, true);
 
 
     // Uncommenting this call will result in wireframe polygons.
@@ -136,6 +108,7 @@ int main() {
     int nbFrames = 0;
 
     auto start = std::chrono::high_resolution_clock::now();
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     // Game loop
     while (!glfwWindowShouldClose(window)) {
@@ -143,11 +116,10 @@ int main() {
         glfwPollEvents();
 
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
 
-        resourceManager.getProgram("default").use();
+        game.resourceManager.getProgram("default").use();
         glActiveTexture(GL_TEXTURE0);
         texture.bind();
 
@@ -155,16 +127,18 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+
         glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
 
         auto end = std::chrono::high_resolution_clock::now();
-
         auto delta = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
         start = end;
-        spriteAnimator.update(delta);
 
-        sprite2D1.render();
+
+        game.update(delta);
+        game.render();
+
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -184,7 +158,7 @@ int main() {
     glDeleteBuffers(1, &EBO);
     // glDeleteTextures(1, &texture);
     // Terminate GLFW, clearing any resources allocated by GLFW.
-    resourceManager.Destroy();
+    //   resourceManager.Destroy();
     glfwTerminate();
     return 0;
 }
@@ -193,4 +167,24 @@ int main() {
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+
+
+}
+
+bool BtnPressed(int x, int y, Sprite2D &sprite2D) {
+    auto xpos = sprite2D.position().x;
+    auto ypos = sprite2D.position().y;
+    return (x > xpos) && (x < xpos + sprite2D.size().x) && (y > ypos) && (y < ypos + sprite2D.size().y);
+}
+
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        double xpos, ypos;
+        //getting cursor position
+        glfwGetCursorPos(window, &xpos, &ypos);
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        if (BtnPressed(xpos, height - ypos, ResourceManager::getInstance().getSprite("defaultSprite")))
+            std::cout << "sprite - clicked!!!" << std::endl;
+    }
 }

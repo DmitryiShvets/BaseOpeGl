@@ -5,7 +5,7 @@
 #ifndef BASEOPEGL_SUBTEXTURE2D_H
 #define BASEOPEGL_SUBTEXTURE2D_H
 
-#include <glm/vec2.hpp>
+#include "glm/vec2.hpp"
 
 class SubTexture2D {
 public:

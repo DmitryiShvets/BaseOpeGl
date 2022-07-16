@@ -11,7 +11,7 @@ class SpriteAnimator {
 public:
     SpriteAnimator(Sprite2D *sprite, double frameDurSecond, size_t frameCount, bool isLoop);
 
-    void update(const double delta);
+    void update(unsigned long long delta);
 
 private:
     size_t mAnimationTime = 0;

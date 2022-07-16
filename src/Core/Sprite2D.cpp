@@ -4,8 +4,8 @@
 
 #include "Sprite2D.h"
 
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "glm/mat4x4.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 
 Sprite2D::Sprite2D(const glm::vec2 &mPosition, const glm::vec2 &mSize, float mRotation, Texture2D *mTexture, ShaderProgram *mProgram) : Object2D(
@@ -100,7 +100,7 @@ Sprite2D::~Sprite2D() {
 }
 
 Sprite2D::Sprite2D(const glm::vec2 &mPosition, const glm::vec2 &mSize, float mRotation, MultiTexture2D *mTexture, ShaderProgram *mProgram, const size_t &subTexName) : Object2D(
-        mPosition, mSize, mRotation), mTexture(mTexture), mProgram(mProgram) {
+        mPosition, mSize, mRotation), mTexture(mTexture), mProgram(mProgram), mCurrentFrameId(subTexName) {
     const GLfloat verVBO[] = {
             //x(s)  y(t)
             0.0f, 0.0f,
@@ -202,4 +202,54 @@ size_t Sprite2D::getLastFrame() {
 
 void Sprite2D::setCurrentFrame(size_t frameId) {
     mCurrentFrameId = frameId;
+}
+
+glm::vec2 Sprite2D::position() {
+    return Object2D::position();
+}
+
+glm::vec2 Sprite2D::size() {
+    return Object2D::size();
+}
+
+float Sprite2D::rotation() {
+    return Object2D::rotation();
+}
+
+Sprite2D &Sprite2D::operator=(Sprite2D &&sprite2D) noexcept {
+    if (this != &sprite2D) {
+
+        glDeleteVertexArrays(1, &mVAO);
+        glDeleteBuffers(1, &mVerCoordVBO);
+        glDeleteBuffers(1, &mVerColorVBO);
+        mTexture = sprite2D.mTexture;
+        mProgram = sprite2D.mProgram;
+        mVAO = sprite2D.mVAO;
+        mVerCoordVBO = sprite2D.mVerCoordVBO;
+        mVerColorVBO = sprite2D.mVerColorVBO;
+        mLastFrameId = sprite2D.mLastFrameId;
+        mCurrentFrameId = sprite2D.mCurrentFrameId;
+
+
+        sprite2D.mVAO = 0;
+        sprite2D.mVerCoordVBO = 0;
+        sprite2D.mVerColorVBO = 0;
+
+    }
+    return *this;
+}
+
+Sprite2D::Sprite2D(Sprite2D &&sprite2D) noexcept: Object2D(sprite2D) {
+    mTexture = sprite2D.mTexture;
+    mProgram = sprite2D.mProgram;
+    mVAO = sprite2D.mVAO;
+    mVerCoordVBO = sprite2D.mVerCoordVBO;
+    mVerColorVBO = sprite2D.mVerColorVBO;
+    mLastFrameId = sprite2D.mLastFrameId;
+    mCurrentFrameId = sprite2D.mCurrentFrameId;
+
+
+    sprite2D.mVAO = 0;
+    sprite2D.mVerCoordVBO = 0;
+    sprite2D.mVerColorVBO = 0;
 }

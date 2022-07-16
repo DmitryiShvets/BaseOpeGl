@@ -36,6 +36,23 @@ public:
 
     size_t getLastFrame();
 
+    glm::vec2 position() override;
+
+    glm::vec2 size() override;
+
+    float rotation() override;
+
+    Sprite2D() = delete;
+
+    Sprite2D(Sprite2D &) = delete;
+
+    Sprite2D &operator=(const Sprite2D &) = delete;
+
+    Sprite2D &operator=(Sprite2D &&sprite2D) noexcept;
+
+    Sprite2D(Sprite2D &&sprite2D) noexcept;
+
+
 private:
     Texture2D *mTexture;
     ShaderProgram *mProgram;
@@ -43,8 +60,8 @@ private:
     GLuint mVAO;
     GLuint mVerCoordVBO;
     GLuint mVerColorVBO;
-    size_t mLastFrameId;
-    size_t mCurrentFrameId = 0;
+    size_t mLastFrameId = 0;
+    size_t mCurrentFrameId;
 
 };
 

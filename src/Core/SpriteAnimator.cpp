@@ -9,12 +9,13 @@ SpriteAnimator::SpriteAnimator(Sprite2D *sprite, double frameDurSecond, size_t f
                                                                                                        mFrameDuration(frameDurSecond * 1000000000),
                                                                                                        mFrameCount(frameCount), isLoop(loop) {}
 
-void SpriteAnimator::update(const double delta) {
+void SpriteAnimator::update(unsigned long long delta) {
     mAnimationTime += delta;
 
     if (mAnimationTime > mFrameDuration && mFrame < mFrameCount) {
 
         mSprite->setCurrentFrame(++mFrame);
+
         mAnimationTime = 0;
     }
 

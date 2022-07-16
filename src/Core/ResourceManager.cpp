@@ -35,6 +35,9 @@ void ResourceManager::Init() {
 
     mMulTextures.emplace("defaultSprite", MultiTexture2D("atlas.png", {1, 2, 3, 4, 5}, 200, 150));
 
+    mSprites.emplace("defaultSprite", Sprite2D(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0, &getMultiTexture("defaultSprite"),
+                                               &getProgram("defaultSprite"), 1));
+
 }
 
 void ResourceManager::Destroy() {
@@ -42,6 +45,7 @@ void ResourceManager::Destroy() {
     shaderPrograms.clear();
     textures.clear();
     mMulTextures.clear();
+    mSprites.clear();
 }
 
 
@@ -76,4 +80,12 @@ MultiTexture2D &ResourceManager::getMultiTexture(const std::string &textureName)
         return it->second;
     }
     return mMulTextures.find("defaultSprite")->second;
+}
+
+Sprite2D &ResourceManager::getSprite(const std::string &textureName) {
+    auto it = mSprites.find(textureName);
+    if (it != mSprites.end()) {
+        return it->second;
+    }
+    return mSprites.find("defaultSprite")->second;
 }

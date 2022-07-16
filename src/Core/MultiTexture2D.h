@@ -6,7 +6,7 @@
 #define BASEOPEGL_MULTITEXTURE2D_H
 
 #include "Texture2D.h"
-#include <glm/vec2.hpp>
+#include "glm/vec2.hpp"
 #include <map>
 #include <string>
 #include <vector>

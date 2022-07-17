@@ -10,10 +10,12 @@
 #include <cmath>
 
 #include "src/Core/Texture2D.h"
-
+#include "src/Core/BufferObjects.h"
 #include <glm/vec2.hpp>
 #include <chrono>
 #include "src/Game/Game.h"
+
+#include "glm/gtc/matrix_transform.hpp"
 
 // Function prototypes
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
@@ -23,6 +25,8 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 // Window dimensions
 glm::ivec2 windowSize(800, 600);
 
+//Window State
+bool gWindowPaused = false;
 
 // The MAIN function, from here we start the application and run the game loop
 int main() {
@@ -59,6 +63,7 @@ int main() {
     glViewport(0, 0, width, height);
 
     GLfloat vertices[] = {
+            //x   //y   //z  //R    //G   //B   //s   //t
             0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top Right
             0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
@@ -69,39 +74,100 @@ int main() {
             1, 2, 3   // Second Triangle
     };
 
-    GLuint VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+//    GLuint VBO1, VAO1, EBO1;
+//
+//
+//    // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+//    glGenVertexArrays(1, &VAO1);
+//    glBindVertexArray(VAO1);
+//
+//    glGenBuffers(1, &VBO1);
+//    glBindBuffer(GL_ARRAY_BUFFER, VBO1);
+//    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+//
+//    // Position attribute
+//    glEnableVertexAttribArray(0);
+//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *) 0);
+//    // Color attribute
+//    glEnableVertexAttribArray(1);
+//    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
+//    // TexCoord attribute
+//    glEnableVertexAttribArray(2);
+//    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *) (6 * sizeof(GLfloat)));
+//    glBindBuffer(GL_ARRAY_BUFFER, 0);
+//
+//    glGenBuffers(1, &EBO1);
+//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO1);
+//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+//
+//    glBindVertexArray(0);
+//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
-    // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-    glBindVertexArray(VAO);
+    VBO VBO2;
+    EBO EBO2;
+    VAO VAO2;
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    VAO2.bind();
+    VBO2.init(vertices, 8 * 4 * sizeof(GLfloat));
 
-    // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *) 0);
-    glEnableVertexAttribArray(0);
-    // Color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-    // TexCoord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *) (6 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(2);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    VBOLayout VBO2Layout;
+    VBO2Layout.addLayoutElement(3, GL_FLOAT, GL_FALSE);
+    VBO2Layout.addLayoutElement(3, GL_FLOAT, GL_FALSE);
+    VBO2Layout.addLayoutElement(2, GL_FLOAT, GL_FALSE);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    VAO2.addBuffer(VBO2, VBO2Layout);
+    VBO2.unbind();
 
-    glBindVertexArray(0);
+    EBO2.init(indices, 3 * 2 * sizeof(GLuint));
 
+    VAO2.unbind();
+    EBO2.unbind();
 
     Texture2D &texture = game.resourceManager.getTexture("default");
 
+////MENU
+    const GLfloat vertex[] = {
+            //x(s)  y(t)
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+    };
+    // GLuint menuVAO, menuVerVBO;
+    VBO menuVBO;
+    VAO menuVAO;
+    //  glGenVertexArrays(1, &menuVAO);
+    menuVAO.bind();
+    //  glBindVertexArray(menuVAO);
+
+    //glGenBuffers(1, &menuVerVBO);
+    // glBindBuffer(GL_ARRAY_BUFFER, menuVerVBO);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(menuVBO), &menuVBO, GL_STATIC_DRAW);
+    menuVBO.init(vertex, 2 * 6 * sizeof(GLfloat));
+
+    VBOLayout menuVBOLayout;
+    menuVBOLayout.addLayoutElement(2, GL_FLOAT, GL_FALSE);
+
+    menuVAO.addBuffer(menuVBO, menuVBOLayout);
+
+    // glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 
+    menuVBO.unbind();
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    menuVAO.unbind();
+    //  glBindVertexArray(0);
+
+    glm::vec2 pos(10.0f, windowSize.y - 50);
+    glm::vec2 pos1(10.0f, windowSize.y - 100);
+    glm::vec2 size(100.0f, 30.0f);
+
+/////
     // Uncommenting this call will result in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     double lastTime = glfwGetTime();
@@ -123,10 +189,12 @@ int main() {
         glActiveTexture(GL_TEXTURE0);
         texture.bind();
 
-        glBindVertexArray(VAO);
+        VAO2.bind();
+       // glBindVertexArray(VAO1);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        VAO2.unbind();
+        //glBindVertexArray(0);
 
         glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
@@ -139,6 +207,39 @@ int main() {
         game.update(delta);
         game.render();
 
+        if (gWindowPaused) {
+            game.resourceManager.getProgram("defaultSprite").use();
+            glm::mat4 modelMatrix(1.0f);
+            modelMatrix = glm::translate(modelMatrix, glm::vec3(pos, 0.0f));
+            modelMatrix = glm::translate(modelMatrix, glm::vec3(0.5 * size.x, 0.5 * size.y, 0.0f));
+            modelMatrix = glm::rotate(modelMatrix, glm::radians(0.f), glm::vec3(0.0f, 0.0f, 1.0f));
+            modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5 * size.x, -0.5 * size.y, 0.0f));
+            modelMatrix = glm::scale(modelMatrix, glm::vec3(size, 1.0f));
+            game.resourceManager.getProgram("defaultSprite").setUniform("modelMatrix", modelMatrix);
+
+            menuVAO.bind();
+            // glBindVertexArray(menuVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            menuVAO.unbind();
+            //  glBindVertexArray(0);
+            glUseProgram(0);
+
+            game.resourceManager.getProgram("defaultSprite").use();
+            glm::mat4 modelMatrix1(1.0f);
+            modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(pos1, 0.0f));
+            modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(0.5 * size.x, 0.5 * size.y, 0.0f));
+            modelMatrix1 = glm::rotate(modelMatrix1, glm::radians(0.f), glm::vec3(0.0f, 0.0f, 1.0f));
+            modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(-0.5 * size.x, -0.5 * size.y, 0.0f));
+            modelMatrix1 = glm::scale(modelMatrix1, glm::vec3(size, 1.0f));
+            game.resourceManager.getProgram("defaultSprite").setUniform("modelMatrix", modelMatrix1);
+
+            menuVAO.bind();
+            // glBindVertexArray(menuVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            menuVAO.unbind();
+            // glBindVertexArray(0);
+            glUseProgram(0);
+        }
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -153,9 +254,9 @@ int main() {
         }
     }
     // Properly de-allocate all resources once they've outlived their purpose
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+ //   glDeleteVertexArrays(1, &VAO1);
+  //  glDeleteBuffers(1, &VBO1);
+ //   glDeleteBuffers(1, &EBO1);
     // glDeleteTextures(1, &texture);
     // Terminate GLFW, clearing any resources allocated by GLFW.
     //   resourceManager.Destroy();
@@ -167,7 +268,8 @@ int main() {
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
-
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+        gWindowPaused = !gWindowPaused;
 
 }
 
@@ -177,6 +279,11 @@ bool BtnPressed(int x, int y, Sprite2D &sprite2D) {
     return (x > xpos) && (x < xpos + sprite2D.size().x) && (y > ypos) && (y < ypos + sprite2D.size().y);
 }
 
+
+bool clicked(double x, double y, glm::ivec2 pos, glm::ivec2 size) {
+    return (x > pos.x) && (x < pos.x + size.x) && (y > pos.y) && (y < pos.y + size.y);
+}
+
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         double xpos, ypos;
@@ -184,7 +291,20 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         glfwGetCursorPos(window, &xpos, &ypos);
         int width, height;
         glfwGetWindowSize(window, &width, &height);
+        if (gWindowPaused && clicked(xpos, height - ypos, glm::ivec2(10.0f, windowSize.y - 50), glm::ivec2(100.0f, 30.0f)))
+            glfwSetWindowShouldClose(window, GL_TRUE);
         if (BtnPressed(xpos, height - ypos, ResourceManager::getInstance().getSprite("defaultSprite")))
             std::cout << "sprite - clicked!!!" << std::endl;
+        else std::cout << "click - x: " << xpos << " y: " << height - ypos << std::endl;
+
     }
+}
+
+void draw_menu() {
+    GLfloat vertices[] = {
+            0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top Right
+            0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
+            -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f  // Top Left
+    };
 }

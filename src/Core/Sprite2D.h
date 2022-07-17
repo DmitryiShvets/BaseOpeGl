@@ -11,7 +11,7 @@
 #include "Object2D.h"
 #include "MultiTexture2D.h"
 #include "ShaderProgram.h"
-
+#include "BufferObjects.h"
 
 class Sprite2D : Object2D {
 public:
@@ -57,9 +57,13 @@ private:
     Texture2D *mTexture;
     ShaderProgram *mProgram;
     //  ResourceManager &resourceManager;
-    GLuint mVAO;
-    GLuint mVerCoordVBO;
-    GLuint mVerColorVBO;
+
+    VAO mVAO;
+    // GLuint mVAO;
+    VBO mVerCoordVBO;
+    // GLuint mVerCoordVBO;
+    VBO mVerColorVBO;
+    //GLuint mVerColorVBO;
     size_t mLastFrameId = 0;
     size_t mCurrentFrameId;
 

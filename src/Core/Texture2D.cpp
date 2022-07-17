@@ -11,7 +11,6 @@
 #include "../stb_image.h"
 
 
-
 Texture2D::Texture2D(const char *path) {
     stbi_set_flip_vertically_on_load(true);
     unsigned char *image = stbi_load(path, &mWidth, &mHeight, &channel, 0);
@@ -42,17 +41,17 @@ Texture2D::Texture2D(const char *path) {
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(image);
     glBindTexture(GL_TEXTURE_2D, 0);
-  //  std::cout << "Texture BASE (" << this << ") " << path << " created" << std::endl;
+    //  std::cout << "Texture BASE (" << this << ") " << path << " created" << std::endl;
 }
 
 Texture2D::~Texture2D() {
-   // std::cout << "Texture BASE (" << this << ")" << " deleted" << std::endl;
+    // std::cout << "Texture BASE (" << this << ")" << " deleted" << std::endl;
     glDeleteTextures(1, &textureID);
     textureID = 0;
 }
 
 Texture2D &Texture2D::operator=(Texture2D &&texture) noexcept {
-   // std::cout << "Assignment-Move Texture2D (" << this << ") called " << std::endl;
+    // std::cout << "Assignment-Move Texture2D (" << this << ") called " << std::endl;
     if (this != &texture) {
         glDeleteProgram(textureID);
         textureID = texture.textureID;
@@ -68,7 +67,7 @@ Texture2D &Texture2D::operator=(Texture2D &&texture) noexcept {
 }
 
 Texture2D::Texture2D(Texture2D &&texture) noexcept {
-   // std::cout << "Constructor-Move Texture2D (" << this << ") called " << std::endl;
+    // std::cout << "Constructor-Move Texture2D (" << this << ") called " << std::endl;
     textureID = texture.textureID;
     format = texture.format;
     mWidth = texture.mWidth;
@@ -83,6 +82,11 @@ void Texture2D::bind() {
     else std::cerr << " Texture not init " << std::endl;
 }
 
+void Texture2D::unbind() {
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
 int Texture2D::width() {
     return mHeight;
 }
@@ -95,3 +99,4 @@ const SubTexture2D &Texture2D::getSubTexture(const size_t &subTexName) {
     const static SubTexture2D defaultSubTexture;
     return defaultSubTexture;
 }
+

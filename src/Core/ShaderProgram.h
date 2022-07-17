@@ -34,6 +34,8 @@ public:
 
     void use();
 
+    void unbind();
+
     GLuint &getUintProgram();
 
     void setUniform(const std::string &uniformName, const glm::mat4 &matrixValue);

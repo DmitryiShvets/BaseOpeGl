@@ -6,7 +6,7 @@
 
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-
+#include "Render.h"
 
 Sprite2D::Sprite2D(const glm::vec2 &mPosition, const glm::vec2 &mSize, float mRotation, Texture2D *mTexture, ShaderProgram *mProgram) : Object2D(
         mPosition, mSize, mRotation), mTexture(mTexture), mProgram(mProgram) {
@@ -37,7 +37,7 @@ Sprite2D::Sprite2D(const glm::vec2 &mPosition, const glm::vec2 &mSize, float mRo
     mVAO.bind();
 
     mVerCoordVBO.init(verVBO, 2 * 6 * sizeof(GLfloat));
-    mVAO.addBuffer(mVerCoordVBO, mVerCoordVBOLayout);
+    mVAO.addBuffer(mVerCoordVBO, mVerCoordVBOLayout, 6);
     mVerCoordVBO.unbind();
 
     mVerColorVBO.init(verVBO1, 2 * 6 * sizeof(GLfloat));
@@ -79,19 +79,22 @@ void Sprite2D::render() {
     modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5 * mSize.x, -0.5 * mSize.y, 0.0f));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(mSize, 1.0f));
 
-    mVAO.bind();
     // glBindVertexArray(mVAO);
     //resourceManager.getProgram(mProgram).setUniform("modelMatrix", modelMatrix);
     mProgram->setUniform("modelMatrix", modelMatrix);
     glActiveTexture(GL_TEXTURE0);
     //resourceManager.getTexture(mTexture).bind();
     mTexture->bind();
-    glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    mVAO.unbind();
+    Renderer::draw(mVAO);
+    //mVAO.bind();
+    //glDrawArrays(GL_TRIANGLES, 0, 6);
+    // mVAO.unbind();
     // glBindVertexArray(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glUseProgram(0);
+    mTexture->unbind();
+    //glBindTexture(GL_TEXTURE_2D, 0);
+    mProgram->unbind();
+//    glUseProgram(0);
 }
 
 Sprite2D::~Sprite2D() {
@@ -135,7 +138,7 @@ Sprite2D::Sprite2D(const glm::vec2 &mPosition, const glm::vec2 &mSize, float mRo
     VBOLayout mVerCoordVBOLayout;
     mVerCoordVBOLayout.addLayoutElement(2, GL_FLOAT, GL_FALSE);
 
-    mVAO.addBuffer(mVerCoordVBO, mVerCoordVBOLayout);
+    mVAO.addBuffer(mVerCoordVBO, mVerCoordVBOLayout, 6);
     //glEnableVertexAttribArray(0);
     // glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     mVerCoordVBO.unbind();
@@ -185,19 +188,22 @@ void Sprite2D::render(const glm::vec2 &position, const glm::vec2 &size, float ro
     modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5 * size.x, -0.5 * size.y, 0.0f));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(size, 1.0f));
 
-    mVAO.bind();
     // glBindVertexArray(mVAO);
     mProgram->setUniform("modelMatrix", modelMatrix);
 
     glActiveTexture(GL_TEXTURE0);
     mTexture->bind();
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    Renderer::draw(mVAO);
+    // mVAO.bind();
+    //glDrawArrays(GL_TRIANGLES, 0, 6);
+    // mVAO.unbind();
 
-    mVAO.unbind();
     //glBindVertexArray(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glUseProgram(0);
+    mTexture->unbind();
+//    glBindTexture(GL_TEXTURE_2D, 0);
+    mProgram->unbind();
+    //glUseProgram(0);
 
 }
 

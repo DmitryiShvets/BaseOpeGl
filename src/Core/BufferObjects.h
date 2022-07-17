@@ -39,11 +39,13 @@ class EBO {
 public:
     EBO();
 
-    void init(const void *data, const unsigned int size);
+    void init(const void *data, const unsigned int count);
 
     void bind() const;
 
     void unbind() const;
+
+    unsigned int count() const;
 
     ~EBO();
 
@@ -57,6 +59,8 @@ public:
 
 private:
     GLuint mEBO;
+
+    unsigned int mCount;
 };
 
 struct VBOLayoutElements {
@@ -91,7 +95,9 @@ public:
 
     void unbind() const;
 
-    void addBuffer(const VBO &buffer, const VBOLayout &layout);
+    void addBuffer(const VBO &buffer, const VBOLayout &layout,const unsigned  int countVertex=0);
+
+    unsigned int count() const;
 
     ~VAO();
 
@@ -106,6 +112,7 @@ public:
 private:
     GLuint mVAO;
     unsigned int mBuffersCount = 0;
+    unsigned int mVertexCount = 0;
 };
 
 

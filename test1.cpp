@@ -14,7 +14,7 @@
 #include <glm/vec2.hpp>
 #include <chrono>
 #include "src/Game/Game.h"
-
+#include "src/Core/Render.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 // Function prototypes
@@ -60,7 +60,9 @@ int main() {
     // Define the viewport dimensions
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
+
+    Renderer::setViewPort(0, 0, width, height);
+    //glViewport(0, 0, width, height);
 
     GLfloat vertices[] = {
             //x   //y   //z  //R    //G   //B   //s   //t
@@ -116,10 +118,10 @@ int main() {
     VBO2Layout.addLayoutElement(3, GL_FLOAT, GL_FALSE);
     VBO2Layout.addLayoutElement(2, GL_FLOAT, GL_FALSE);
 
-    VAO2.addBuffer(VBO2, VBO2Layout);
+    VAO2.addBuffer(VBO2, VBO2Layout, 6);
     VBO2.unbind();
 
-    EBO2.init(indices, 3 * 2 * sizeof(GLuint));
+    EBO2.init(indices, 3 * 2);
 
     VAO2.unbind();
     EBO2.unbind();
@@ -152,7 +154,7 @@ int main() {
     VBOLayout menuVBOLayout;
     menuVBOLayout.addLayoutElement(2, GL_FLOAT, GL_FALSE);
 
-    menuVAO.addBuffer(menuVBO, menuVBOLayout);
+    menuVAO.addBuffer(menuVBO, menuVBOLayout, 6);
 
     // glEnableVertexAttribArray(0);
     // glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
@@ -174,7 +176,9 @@ int main() {
     int nbFrames = 0;
 
     auto start = std::chrono::high_resolution_clock::now();
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+    Renderer::setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    //  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     // Game loop
     while (!glfwWindowShouldClose(window)) {
@@ -182,22 +186,27 @@ int main() {
         glfwPollEvents();
 
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        Renderer::clear();
+        //glClear(GL_COLOR_BUFFER_BIT);
 
 
         game.resourceManager.getProgram("default").use();
         glActiveTexture(GL_TEXTURE0);
         texture.bind();
 
-        VAO2.bind();
-       // glBindVertexArray(VAO1);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        VAO2.unbind();
+        Renderer::draw(VAO2, EBO2);
+        // VAO2.bind();
+        // glBindVertexArray(VAO1);
+        //  glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // VAO2.unbind();
         //glBindVertexArray(0);
 
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glUseProgram(0);
+        texture.unbind();
+        //glBindTexture(GL_TEXTURE_2D, 0);
+        game.resourceManager.getProgram("default").unbind();
+//        glUseProgram(0);
 
         auto end = std::chrono::high_resolution_clock::now();
         auto delta = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
@@ -208,7 +217,9 @@ int main() {
         game.render();
 
         if (gWindowPaused) {
-            game.resourceManager.getProgram("defaultSprite").use();
+            auto &program = game.resourceManager.getProgram("defaultSprite");
+
+            program.use();
             glm::mat4 modelMatrix(1.0f);
             modelMatrix = glm::translate(modelMatrix, glm::vec3(pos, 0.0f));
             modelMatrix = glm::translate(modelMatrix, glm::vec3(0.5 * size.x, 0.5 * size.y, 0.0f));
@@ -217,14 +228,15 @@ int main() {
             modelMatrix = glm::scale(modelMatrix, glm::vec3(size, 1.0f));
             game.resourceManager.getProgram("defaultSprite").setUniform("modelMatrix", modelMatrix);
 
-            menuVAO.bind();
+            Renderer::draw(menuVAO);
+            //  menuVAO.bind();
             // glBindVertexArray(menuVAO);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-            menuVAO.unbind();
+            // glDrawArrays(GL_TRIANGLES, 0, 6);
+            // menuVAO.unbind();
             //  glBindVertexArray(0);
-            glUseProgram(0);
+            program.unbind();
 
-            game.resourceManager.getProgram("defaultSprite").use();
+            program.use();
             glm::mat4 modelMatrix1(1.0f);
             modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(pos1, 0.0f));
             modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(0.5 * size.x, 0.5 * size.y, 0.0f));
@@ -233,12 +245,13 @@ int main() {
             modelMatrix1 = glm::scale(modelMatrix1, glm::vec3(size, 1.0f));
             game.resourceManager.getProgram("defaultSprite").setUniform("modelMatrix", modelMatrix1);
 
-            menuVAO.bind();
+            Renderer::draw(menuVAO);
+            // menuVAO.bind();
             // glBindVertexArray(menuVAO);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-            menuVAO.unbind();
+            //  glDrawArrays(GL_TRIANGLES, 0, 6);
+            //  menuVAO.unbind();
             // glBindVertexArray(0);
-            glUseProgram(0);
+            program.unbind();
         }
 
         // Swap the screen buffers
@@ -254,9 +267,9 @@ int main() {
         }
     }
     // Properly de-allocate all resources once they've outlived their purpose
- //   glDeleteVertexArrays(1, &VAO1);
-  //  glDeleteBuffers(1, &VBO1);
- //   glDeleteBuffers(1, &EBO1);
+    //   glDeleteVertexArrays(1, &VAO1);
+    //  glDeleteBuffers(1, &VBO1);
+    //   glDeleteBuffers(1, &EBO1);
     // glDeleteTextures(1, &texture);
     // Terminate GLFW, clearing any resources allocated by GLFW.
     //   resourceManager.Destroy();

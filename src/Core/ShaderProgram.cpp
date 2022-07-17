@@ -63,6 +63,11 @@ void ShaderProgram::use() {
     glUseProgram(hProgram);
 }
 
+
+void ShaderProgram::unbind() {
+    glUseProgram(0);
+}
+
 ShaderProgram::~ShaderProgram() {
     // std::cout << "Destructor ShaderProgram (" << this << ") called " << std::endl;
     glDeleteProgram(hProgram);
@@ -112,6 +117,7 @@ void ShaderProgram::setUniform(const std::string &uniformName, const glm::vec4 &
 void ShaderProgram::setUniform(const std::string &uniformName, int value) {
     glUniform1i(glGetUniformLocation(hProgram, uniformName.c_str()), value);
 }
+
 
 std::ostream &operator<<(std::ostream &lhs, const GLType e) {
     switch (e.type) {

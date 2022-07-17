@@ -49,9 +49,7 @@ void VBO::unbind() const {
 }
 
 
-EBO::EBO() : mEBO(0) {
-
-}
+EBO::EBO() : mEBO(0), mCount(0) {}
 
 EBO::~EBO() {
     glDeleteBuffers(1, &mEBO);
@@ -59,25 +57,29 @@ EBO::~EBO() {
 
 EBO::EBO(EBO &&ebo) noexcept {
     mEBO = ebo.mEBO;
+    mCount = ebo.mCount;
 
     ebo.mEBO = 0;
+    ebo.mCount = 0;
 }
 
 EBO &EBO::operator=(EBO &&ebo) noexcept {
     if (this != &ebo) {
         glDeleteBuffers(1, &mEBO);
         mEBO = ebo.mEBO;
+        mCount = ebo.mCount;
 
         ebo.mEBO = 0;
-
+        ebo.mCount = 0;
     }
     return *this;
 }
 
-void EBO::init(const void *data, const unsigned int size) {
+void EBO::init(const void *data, const unsigned int count) {
+    mCount = count;
     glGenBuffers(1, &mEBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), data, GL_STATIC_DRAW);
 }
 
 
@@ -87,6 +89,10 @@ void EBO::bind() const {
 
 void EBO::unbind() const {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+unsigned int EBO::count() const {
+    return mCount;
 }
 
 VBOLayout::VBOLayout() : mStride(0) {}
@@ -120,7 +126,7 @@ void VAO::unbind() const {
     glBindVertexArray(0);
 }
 
-void VAO::addBuffer(const VBO &buffer, const VBOLayout &layout) {
+void VAO::addBuffer(const VBO &buffer, const VBOLayout &layout, const unsigned int countVertex) {
     bind();
     buffer.bind();
     GLbyte *offset = nullptr;
@@ -133,7 +139,13 @@ void VAO::addBuffer(const VBO &buffer, const VBOLayout &layout) {
         offset += currentLayout.size;
     }
     mBuffersCount += elements.size();
+    if (countVertex != 0) mVertexCount = countVertex;
 }
+
+unsigned int VAO::count() const {
+    return mVertexCount;
+}
+
 
 VAO::~VAO() {
     glDeleteVertexArrays(1, &mVAO);
@@ -141,17 +153,21 @@ VAO::~VAO() {
 
 VAO::VAO(VAO &&vao) noexcept {
     mVAO = vao.mVAO;
+    mVertexCount = vao.mVertexCount;
 
     vao.mVAO = 0;
+    vao.mVertexCount = 0;
 }
 
 VAO &VAO::operator=(VAO &&vao) noexcept {
     if (this != &vao) {
         glDeleteVertexArrays(1, &mVAO);
         mVAO = vao.mVAO;
+        mVertexCount = vao.mVertexCount;
 
         vao.mVAO = 0;
-
+        vao.mVertexCount = 0;
     }
     return *this;
 }
+

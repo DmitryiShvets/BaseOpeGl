@@ -11,11 +11,15 @@
 
 #include "src/Core/Texture2D.h"
 #include "src/Core/BufferObjects.h"
+#include "src/Core/TextRender.h"
 #include <glm/vec2.hpp>
 #include <chrono>
 #include "src/Game/Game.h"
 #include "src/Core/Render.h"
 #include "glm/gtc/matrix_transform.hpp"
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 // Function prototypes
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
@@ -106,6 +110,7 @@ int main() {
 //    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
+
     VBO VBO2;
     EBO EBO2;
     VAO VAO2;
@@ -180,6 +185,9 @@ int main() {
     Renderer::setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     //  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
+    TextRenderer textRenderer;
+    textRenderer.init();
+
     // Game loop
     while (!glfwWindowShouldClose(window)) {
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
@@ -236,6 +244,9 @@ int main() {
             //  glBindVertexArray(0);
             program.unbind();
 
+            textRenderer.draw(&game.resourceManager.getProgram("defaultText"), "Exit", 45.0f, windowSize.y - 45,
+                              0.4f, glm::vec3(1.0f, 0.8f, 0.2f));
+
             program.use();
             glm::mat4 modelMatrix1(1.0f);
             modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(pos1, 0.0f));
@@ -253,6 +264,8 @@ int main() {
             // glBindVertexArray(0);
             program.unbind();
         }
+
+
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -304,7 +317,8 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         glfwGetCursorPos(window, &xpos, &ypos);
         int width, height;
         glfwGetWindowSize(window, &width, &height);
-        if (gWindowPaused && clicked(xpos, height - ypos, glm::ivec2(10.0f, windowSize.y - 50), glm::ivec2(100.0f, 30.0f)))
+        if (gWindowPaused &&
+            clicked(xpos, height - ypos, glm::ivec2(10.0f, windowSize.y - 50), glm::ivec2(100.0f, 30.0f)))
             glfwSetWindowShouldClose(window, GL_TRUE);
         if (BtnPressed(xpos, height - ypos, ResourceManager::getInstance().getSprite("defaultSprite")))
             std::cout << "sprite - clicked!!!" << std::endl;

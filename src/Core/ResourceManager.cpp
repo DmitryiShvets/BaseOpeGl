@@ -29,6 +29,7 @@ void ResourceManager::Init() {
 
     shaderPrograms.emplace("default", ShaderProgram(readFile("res/defaultVER.glsl"), readFile("res/defaultFRG.glsl")));
     shaderPrograms.emplace("defaultSprite", ShaderProgram(readFile("res/defaultSpriteVER.glsl"), readFile("res/defaultSpriteFRG.glsl")));
+    shaderPrograms.emplace("defaultText", ShaderProgram(readFile("res/textVER.glsl"), readFile("res/textFRG.glsl")));
 
     textures.emplace("default", Texture2D("awesomeface.png"));
     textures.emplace("defaultSprite", Texture2D("image.png"));

@@ -44,11 +44,9 @@ public:
 
     void setUniform(const std::string &uniformName, const glm::vec4 &vec4Value);
 
+    void setUniform(const std::string &uniformName, const glm::vec3 &vec3Value);
+
     ~ShaderProgram();
-
-    ShaderProgram() = delete;
-
-    ShaderProgram(ShaderProgram &) = delete;
 
     ShaderProgram &operator=(const ShaderProgram &) = delete;
 

@@ -17,6 +17,7 @@
 #include "src/Game/Game.h"
 #include "src/Core/Render.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "src/Core/Button.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -67,6 +68,8 @@ int main() {
 
     Renderer::setViewPort(0, 0, width, height);
     //glViewport(0, 0, width, height);
+
+///----------Picture---------------------------------------------------------
 
     GLfloat vertices[] = {
             //x   //y   //z  //R    //G   //B   //s   //t
@@ -132,47 +135,12 @@ int main() {
     EBO2.unbind();
 
     Texture2D &texture = game.resourceManager.getTexture("default");
+///-----------------------------------------------------------------------------------
+
 
 ////MENU
-    const GLfloat vertex[] = {
-            //x(s)  y(t)
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-
-            1.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 0.0f,
-    };
-    // GLuint menuVAO, menuVerVBO;
-    VBO menuVBO;
-    VAO menuVAO;
-    //  glGenVertexArrays(1, &menuVAO);
-    menuVAO.bind();
-    //  glBindVertexArray(menuVAO);
-
-    //glGenBuffers(1, &menuVerVBO);
-    // glBindBuffer(GL_ARRAY_BUFFER, menuVerVBO);
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(menuVBO), &menuVBO, GL_STATIC_DRAW);
-    menuVBO.init(vertex, 2 * 6 * sizeof(GLfloat));
-
-    VBOLayout menuVBOLayout;
-    menuVBOLayout.addLayoutElement(2, GL_FLOAT, GL_FALSE);
-
-    menuVAO.addBuffer(menuVBO, menuVBOLayout, 6);
-
-    // glEnableVertexAttribArray(0);
-    // glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-
-    menuVBO.unbind();
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-    menuVAO.unbind();
-    //  glBindVertexArray(0);
-
-    glm::vec2 pos(10.0f, windowSize.y - 50);
-    glm::vec2 pos1(10.0f, windowSize.y - 100);
-    glm::vec2 size(100.0f, 30.0f);
+    Button btn1(glm::vec2(10.0f, windowSize.y - 50), glm::vec2(100.0f, 30.0f));
+    Button btn2(glm::vec2(10.0f, windowSize.y - 100), glm::vec2(100.0f, 30.0f));
 
 /////
     // Uncommenting this call will result in wireframe polygons.
@@ -223,42 +191,9 @@ int main() {
         game.render();
 
         if (gWindowPaused) {
-            auto &program = game.resourceManager.getProgram("defaultSprite");
 
-            program.use();
-            glm::mat4 modelMatrix(1.0f);
-            modelMatrix = glm::translate(modelMatrix, glm::vec3(pos, 0.0f));
-            modelMatrix = glm::translate(modelMatrix, glm::vec3(0.5 * size.x, 0.5 * size.y, 0.0f));
-            modelMatrix = glm::rotate(modelMatrix, glm::radians(0.f), glm::vec3(0.0f, 0.0f, 1.0f));
-            modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5 * size.x, -0.5 * size.y, 0.0f));
-            modelMatrix = glm::scale(modelMatrix, glm::vec3(size, 1.0f));
-            game.resourceManager.getProgram("defaultSprite").setUniform("modelMatrix", modelMatrix);
-
-            Renderer::draw(menuVAO);
-            //  menuVAO.bind();
-            // glBindVertexArray(menuVAO);
-            // glDrawArrays(GL_TRIANGLES, 0, 6);
-            // menuVAO.unbind();
-            //  glBindVertexArray(0);
-            program.unbind();
-
-
-            program.use();
-            glm::mat4 modelMatrix1(1.0f);
-            modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(pos1, 0.0f));
-            modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(0.5 * size.x, 0.5 * size.y, 0.0f));
-            modelMatrix1 = glm::rotate(modelMatrix1, glm::radians(0.f), glm::vec3(0.0f, 0.0f, 1.0f));
-            modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(-0.5 * size.x, -0.5 * size.y, 0.0f));
-            modelMatrix1 = glm::scale(modelMatrix1, glm::vec3(size, 1.0f));
-            game.resourceManager.getProgram("defaultSprite").setUniform("modelMatrix", modelMatrix1);
-
-            Renderer::draw(menuVAO);
-            // menuVAO.bind();
-            // glBindVertexArray(menuVAO);
-            //  glDrawArrays(GL_TRIANGLES, 0, 6);
-            //  menuVAO.unbind();
-            // glBindVertexArray(0);
-            program.unbind();
+            btn1.render();
+            btn2.render();
 
             TextRenderer::draw(L"привет habr. Я тут статью написал. Она о freetype и opengl.\n"
                                "С помощью freetype можно выводить текст.\n"

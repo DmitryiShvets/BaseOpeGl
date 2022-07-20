@@ -19,6 +19,11 @@ void Renderer::draw(const VAO &vao) {
     vao.unbind();
 }
 
+void Renderer::draw(VAO *vao) {
+    vao->bind();
+    glDrawArrays(GL_TRIANGLES, 0, vao->count());
+    vao->unbind();
+}
 
 void Renderer::setClearColor(float r, float g, float b, float a) {
     glClearColor(r, g, b, a);
@@ -31,4 +36,6 @@ void Renderer::clear() {
 void Renderer::setViewPort(int x, int y, int width, int height) {
     glViewport(x, y, width, height);
 }
+
+
 

@@ -28,7 +28,8 @@ ResourceManager::~ResourceManager() {
 void ResourceManager::Init() {
 
     shaderPrograms.emplace("default", ShaderProgram(readFile("res/defaultVER.glsl"), readFile("res/defaultFRG.glsl")));
-    shaderPrograms.emplace("defaultSprite", ShaderProgram(readFile("res/defaultSpriteVER.glsl"), readFile("res/defaultSpriteFRG.glsl")));
+    shaderPrograms.emplace("defaultSprite",
+                           ShaderProgram(readFile("res/defaultSpriteVER.glsl"), readFile("res/defaultSpriteFRG.glsl")));
     shaderPrograms.emplace("defaultText", ShaderProgram(readFile("res/textVER.glsl"), readFile("res/textFRG.glsl")));
 
     textures.emplace("default", Texture2D("awesomeface.png"));
@@ -36,8 +37,10 @@ void ResourceManager::Init() {
 
     mMulTextures.emplace("defaultSprite", MultiTexture2D("atlas.png", {1, 2, 3, 4, 5}, 200, 150));
 
-    mSprites.emplace("defaultSprite", Sprite2D(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0, &getMultiTexture("defaultSprite"),
+    mSprites.emplace("defaultSprite", Sprite2D(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0,
+                                               &getMultiTexture("defaultSprite"),
                                                &getProgram("defaultSprite"), 1));
+    mFonts.emplace("Open-Sans", Font("res/fonts/OpenSans-Bold.ttf"));
 
 }
 
@@ -47,6 +50,7 @@ void ResourceManager::Destroy() {
     textures.clear();
     mMulTextures.clear();
     mSprites.clear();
+    mFonts.clear();
 }
 
 
@@ -89,4 +93,12 @@ Sprite2D &ResourceManager::getSprite(const std::string &textureName) {
         return it->second;
     }
     return mSprites.find("defaultSprite")->second;
+}
+
+Font &ResourceManager::getFont(const std::string &fontName) {
+    auto it = mFonts.find(fontName);
+    if (it != mFonts.end()) {
+        return it->second;
+    }
+    return mFonts.find("defaultSprite")->second;
 }

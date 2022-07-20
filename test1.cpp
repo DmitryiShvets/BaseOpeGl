@@ -185,8 +185,6 @@ int main() {
     Renderer::setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     //  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-    TextRenderer textRenderer;
-    textRenderer.init();
 
     // Game loop
     while (!glfwWindowShouldClose(window)) {
@@ -244,8 +242,6 @@ int main() {
             //  glBindVertexArray(0);
             program.unbind();
 
-            textRenderer.draw(&game.resourceManager.getProgram("defaultText"), "Exit", 45.0f, windowSize.y - 45,
-                              0.4f, glm::vec3(1.0f, 0.8f, 0.2f));
 
             program.use();
             glm::mat4 modelMatrix1(1.0f);
@@ -263,6 +259,12 @@ int main() {
             //  menuVAO.unbind();
             // glBindVertexArray(0);
             program.unbind();
+
+            TextRenderer::draw(L"привет habr. Я тут статью написал. Она о freetype и opengl.\n"
+                               "С помощью freetype можно выводить текст.\n"
+                               "А с помощью моего кода, можно вывести несколько строк в одной текстуре", 45.0f,
+                               windowSize.y - 45, 0.4f, 20.0f, glm::vec3(1.0f, 0.8f, 0.2f));
+
         }
 
 

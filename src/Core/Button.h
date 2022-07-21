@@ -11,15 +11,15 @@
 
 class Button {
 public:
-    Button(const glm::vec2 &position, const glm::vec2 &size);
+    Button(const std::wstring &content,const glm::vec2 &position, const glm::vec2 &size);
 
     void render();
 
 private:
     glm::vec2 mPos;
     glm::vec2 mSize;
-    VAO mVAO;
-    VBO mVBO;
+    VAO *mVAO = &ResourceManager::getInstance().baseVAO;
+    std::wstring mContent;
     ShaderProgram *program = &ResourceManager::getInstance().getProgram("defaultControl");
 };
 

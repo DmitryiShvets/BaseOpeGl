@@ -38,7 +38,6 @@ int main() {
 
     std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 
-    Game game(windowSize);
     // Init GLFW
     glfwInit();
 
@@ -59,6 +58,7 @@ int main() {
     glewExperimental = GL_TRUE;
     // Initialize GLEW to setup the OpenGL Function pointers
     glewInit();
+    Game game(windowSize);
 
     game.init();
 
@@ -139,8 +139,8 @@ int main() {
 
 
 ////MENU
-    Button btn1(glm::vec2(10.0f, windowSize.y - 50), glm::vec2(100.0f, 30.0f));
-    Button btn2(glm::vec2(10.0f, windowSize.y - 100), glm::vec2(100.0f, 30.0f));
+    Button btn1(L"Выйти", glm::vec2(10.0f, windowSize.y - 50), glm::vec2(100.0f, 30.0f));
+    Button btn2(L"Exit", glm::vec2(10.0f, windowSize.y - 100), glm::vec2(100.0f, 30.0f));
 
 /////
     // Uncommenting this call will result in wireframe polygons.
@@ -194,15 +194,7 @@ int main() {
 
             btn1.render();
             btn2.render();
-
-            TextRenderer::draw(L"привет habr. Я тут статью написал. Она о freetype и opengl.\n"
-                               "С помощью freetype можно выводить текст.\n"
-                               "А с помощью моего кода, можно вывести несколько строк в одной текстуре", 45.0f,
-                               windowSize.y - 45, 0.4f, 20.0f, glm::vec3(1.0f, 0.8f, 0.2f));
-
         }
-
-
 
         // Swap the screen buffers
         glfwSwapBuffers(window);

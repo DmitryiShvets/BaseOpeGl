@@ -19,6 +19,7 @@ static std::string readFile(const std::string &path) {
 
 ResourceManager::ResourceManager() {
     std::cout << "Constructor ResourceManager (" << this << ") called " << std::endl;
+
 }
 
 ResourceManager::~ResourceManager() {
@@ -42,6 +43,31 @@ void ResourceManager::Init() {
                                                &getMultiTexture("defaultSprite"),
                                                &getProgram("defaultSprite"), 1));
     mFonts.emplace("Open-Sans", Font("res/fonts/OpenSans-Bold.ttf"));
+
+    const GLfloat vertex[] = {
+            //x(s)  y(t)
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+    };
+
+    baseVAO.bind();
+
+    VBO mVBO;
+    mVBO.init(vertex, 2 * 6 * sizeof(GLfloat));
+
+    VBOLayout menuVBOLayout;
+    menuVBOLayout.addLayoutElement(2, GL_FLOAT, GL_FALSE);
+
+    baseVAO.addBuffer(mVBO, menuVBOLayout, 6);
+
+    mVBO.unbind();
+    baseVAO.unbind();
+
 
 }
 

@@ -3,7 +3,7 @@
 //
 
 #include "Game.h"
-#include "../Core/ResourceManager.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 
@@ -46,7 +46,6 @@ Game::Game(glm::ivec2 windowSize) : mWindowSize(windowSize), resourceManager(Res
 }
 
 Game::~Game() {
-    //ResourceManager &resourceManager = ResourceManager::getInstance();
     resourceManager.Destroy();
     mVecSprites.clear();
     mVecSpriteAnimators.clear();

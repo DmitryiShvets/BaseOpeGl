@@ -16,8 +16,8 @@ add_subdirectory(glm)
 
 add_executable(${PROJECT_NAME} test1.cpp src/Core/ShaderProgram.cpp src/Core/ShaderProgram.h src/Core/ResourceManager.cpp src/Core/ResourceManager.h src/stb_image.h src/Core/Texture2D.cpp src/Core/Texture2D.h src/Core/Sprite2D.cpp src/Core/Sprite2D.h src/Core/MultiTexture2D.cpp src/Core/MultiTexture2D.h src/Core/SubTexture2D.cpp src/Core/SubTexture2D.h src/Core/Object2D.cpp src/Core/Object2D.h src/Core/SpriteAnimator.cpp src/Core/SpriteAnimator.h src/Game/Game.cpp src/Game/Game.h src/Core/BufferObjects.cpp src/Core/BufferObjects.h src/Core/Render.cpp src/Core/Render.h src/Core/TextRender.cpp src/Core/TextRender.h src/Core/Font.cpp src/Core/Font.h src/Core/Button.cpp src/Core/Button.h)
 
-#target_link_libraries(${PROJECT_NAME} glfw glm libopengl32.a glew32.lib)
-target_link_libraries(${PROJECT_NAME} glfw glm libGL.so libGLEW.so libfreetype.so)
+target_link_libraries(${PROJECT_NAME} glfw glm libopengl32.a glew32.lib freetype.lib )
+#target_link_libraries(${PROJECT_NAME} glfw glm libGL.so libGLEW.so libfreetype.so)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)
 

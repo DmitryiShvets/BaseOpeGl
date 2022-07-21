@@ -12,6 +12,7 @@
 #include "MultiTexture2D.h"
 #include "Sprite2D.h"
 #include "Font.h"
+#include "BufferObjects.h"
 
 class ResourceManager {
 public:
@@ -34,6 +35,9 @@ public:
     Font &getFont(const std::string &fontName);
 
     std::map<std::string, Sprite2D> mSprites;
+
+   VAO baseVAO;
+
 private:
     ResourceManager();
 

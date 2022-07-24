@@ -15,7 +15,7 @@
 
 class Game {
 public:
-    Game(glm::ivec2 windowSize);
+    static Game &getInstance();
 
     ~Game();
 
@@ -25,12 +25,19 @@ public:
 
     void init();
 
-    ResourceManager &resourceManager;
+    void destroy();
+
+    Sprite2D &getSprite(const std::string &textureName);
+
 
 private:
+    Game(glm::ivec2 windowSize);
+
     glm::ivec2 mWindowSize;
-    std::vector<Sprite2D> mVecSprites;
+    //std::vector<Sprite2D> mVecSprites;
     std::vector<SpriteAnimator> mVecSpriteAnimators;
+    std::map<std::string, Sprite2D> mSprites;
+    ResourceManager *resourceManager;
 
 };
 

@@ -20,9 +20,9 @@ public:
 
     ~ResourceManager();
 
-    void Init();
+    void init();
 
-    void Destroy();
+    void destroy();
 
     ShaderProgram &getProgram(const std::string &progName);
 
@@ -30,13 +30,9 @@ public:
 
     MultiTexture2D &getMultiTexture(const std::string &textureName);
 
-    Sprite2D &getSprite(const std::string &textureName);
-
     Font &getFont(const std::string &fontName);
 
-    std::map<std::string, Sprite2D> mSprites;
-
-   VAO baseVAO;
+    VAO baseVAO;
 
 private:
     ResourceManager();

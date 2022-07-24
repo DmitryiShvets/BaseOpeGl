@@ -26,7 +26,7 @@ ResourceManager::~ResourceManager() {
     std::cout << "Destructor ResourceManager (" << this << ") called " << std::endl;
 }
 
-void ResourceManager::Init() {
+void ResourceManager::init() {
 
     shaderPrograms.emplace("default", ShaderProgram(readFile("res/defaultVER.glsl"), readFile("res/defaultFRG.glsl")));
     shaderPrograms.emplace("defaultSprite",
@@ -39,9 +39,7 @@ void ResourceManager::Init() {
 
     mMulTextures.emplace("defaultSprite", MultiTexture2D("atlas.png", {1, 2, 3, 4, 5}, 200, 150));
 
-    mSprites.emplace("defaultSprite", Sprite2D(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0,
-                                               &getMultiTexture("defaultSprite"),
-                                               &getProgram("defaultSprite"), 1));
+
     mFonts.emplace("Open-Sans", Font("res/fonts/OpenSans-Bold.ttf"));
 
     const GLfloat vertex[] = {
@@ -71,12 +69,12 @@ void ResourceManager::Init() {
 
 }
 
-void ResourceManager::Destroy() {
+void ResourceManager::destroy() {
     //std::cout << "Destructor ResourceManager (" << this << ") called " << std::endl;
     shaderPrograms.clear();
     textures.clear();
     mMulTextures.clear();
-    mSprites.clear();
+   // mSprites.clear();
     mFonts.clear();
 }
 
@@ -114,13 +112,13 @@ MultiTexture2D &ResourceManager::getMultiTexture(const std::string &textureName)
     return mMulTextures.find("defaultSprite")->second;
 }
 
-Sprite2D &ResourceManager::getSprite(const std::string &textureName) {
-    auto it = mSprites.find(textureName);
-    if (it != mSprites.end()) {
-        return it->second;
-    }
-    return mSprites.find("defaultSprite")->second;
-}
+//Sprite2D &ResourceManager::getSprite(const std::string &textureName) {
+//    auto it = mSprites.find(textureName);
+//    if (it != mSprites.end()) {
+//        return it->second;
+//    }
+//    return mSprites.find("defaultSprite")->second;
+//}
 
 Font &ResourceManager::getFont(const std::string &fontName) {
     auto it = mFonts.find(fontName);

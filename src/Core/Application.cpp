@@ -9,11 +9,10 @@
 
 #include "Texture2D.h"
 #include "BufferObjects.h"
+#include "EventManager.h"
 #include <utility>
-#include <glm/vec2.hpp>
 #include <chrono>
 #include "Render.h"
-#include "Menu.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -58,6 +57,10 @@ void Application::init() {
 
     game = &Game::getInstance();
     game->init();
+
+    menu = &Menu::getInstance();
+    menu->closeEventHandler += Core::EventHandler::Bind(&Application::close, this);
+
 }
 
 Application::Application(std::string name, int width, int height) : name(std::move(name)), width(width), height(height) {}
@@ -68,9 +71,6 @@ bool BtnPressed(int x, int y, Sprite2D &sprite2D) {
     return (x > xpos) && (x < xpos + sprite2D.size().x) && (y > ypos) && (y < ypos + sprite2D.size().y);
 }
 
-bool clicked(double x, double y, glm::ivec2 pos, glm::ivec2 size) {
-    return (x > pos.x) && (x < pos.x + size.x) && (y > pos.y) && (y < pos.y + size.y);
-}
 
 void Application::mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -79,9 +79,8 @@ void Application::mouse_button_callback(GLFWwindow *window, int button, int acti
         glfwGetCursorPos(window, &xpos, &ypos);
         int width, nowHeight;
         glfwGetWindowSize(window, &width, &nowHeight);
-        if (getInstance().gWindowPaused &&
-            clicked(xpos, nowHeight - ypos, glm::ivec2(10.0f, nowHeight - 50), glm::ivec2(100.0f, 30.0f)))
-            glfwSetWindowShouldClose(window, GL_TRUE);
+        MouseButtonPressedEvent e(button, xpos, nowHeight - ypos);
+        getInstance().eventRoute(&e);
         if (BtnPressed(xpos, nowHeight - ypos, Game::getInstance().getSprite("defaultSprite")))
             std::cout << "sprite - clicked!!!" << std::endl;
         else std::cout << "click - x: " << xpos << " y: " << nowHeight - ypos << std::endl;
@@ -92,8 +91,8 @@ void Application::mouse_button_callback(GLFWwindow *window, int button, int acti
 void Application::key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
-    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
-        getInstance().gWindowPaused = !getInstance().gWindowPaused;
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) getInstance().switchState();
+
 
 }
 
@@ -143,7 +142,7 @@ void Application::start() {
 
 
 ////MENU
-    Menu menu(width, height);
+    //Menu menu(width, height);
 /////
 
     double lastTime = glfwGetTime();
@@ -182,7 +181,7 @@ void Application::start() {
         game->render();
 
         if (gWindowPaused) {
-            menu.render();
+            menu->render();
         }
 
         // Swap the screen buffers
@@ -197,13 +196,29 @@ void Application::start() {
             lastTime += 1.0;
         }
     }
-
+    game->destroy();
+    resourceManager->destroy();
     glfwTerminate();
 }
 
 void Application::close() {
-    game->destroy();
-    resourceManager->destroy();
+
     glfwSetWindowShouldClose(window, GL_TRUE);
+
+}
+
+void Application::eventRoute(Event *e) {
+    if (e->getType() == Event::EventType::MOUSE_BUTTON_PRESSED_EVENT) {
+        EventManager::getInstance().publish(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, e);
+    }
+}
+
+void Application::switchState() {
+    gWindowPaused = !gWindowPaused;
+}
+
+
+Application::~Application() {
+    menu->closeEventHandler -= Core::EventHandler::Bind(&Application::close, this);
 }
 

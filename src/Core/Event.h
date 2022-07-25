@@ -26,7 +26,8 @@
 
 #include <list>
 //#include <utility>  // for std::pair
-
+#include <functional>
+#include <utility>
 
 namespace Core    // short for SharpTools
 {
@@ -163,6 +164,10 @@ namespace Core    // short for SharpTools
                 : m_pFunctionToCall(functionToCall) {
         }
 
+        EventHandlerImplForNonMemberFunction(std::function<void()> functionToCall)
+                : m_pFunctionToCall(std::move(functionToCall)) {
+        }
+
         /** will be called eventually when an Event is raised */
         virtual void OnEvent() {
             m_pFunctionToCall();
@@ -181,11 +186,12 @@ namespace Core    // short for SharpTools
                 return false;
             }
 
-            return this->m_pFunctionToCall == pHandlerCasted->m_pFunctionToCall;
+            return &this->m_pFunctionToCall == &pHandlerCasted->m_pFunctionToCall;
         }
 
     private:
-        void (*m_pFunctionToCall)(); ///< passed in the constructor. Will get called when an event is raised.
+        //  void (*m_pFunctionToCall)(); ///< passed in the constructor. Will get called when an event is raised.
+        std::function<void()> m_pFunctionToCall;
     };
 
     /** A helper that handles void member function calls */
@@ -258,6 +264,8 @@ namespace Core    // short for SharpTools
             return new EventHandlerImplForNonMemberFunction<T>(nonMemberFunctionToCall);
         }
 
+
+
         /** @overload */
         template<typename T, typename U>
         static EventHandlerImpl<T> *Bind(void(U::*memberFunctionToCall)(T &), U *thisPtr) {
@@ -270,6 +278,10 @@ namespace Core    // short for SharpTools
 
         /** @overload */
         static EventHandlerImpl<void> *Bind(void(*nonMemberFunctionToCall)()) {
+            return new EventHandlerImplForNonMemberFunction<void>(nonMemberFunctionToCall);
+        }
+
+        static EventHandlerImpl<void> *Bind(const std::function<void()>& nonMemberFunctionToCall) {
             return new EventHandlerImplForNonMemberFunction<void>(nonMemberFunctionToCall);
         }
 
@@ -302,6 +314,7 @@ namespace Core    // short for SharpTools
         EventBase() = default;
 
         EventBase(const EventBase &) = delete;
+
         EventBase &operator=(const EventBase &) = delete;
 
         /**
@@ -355,6 +368,10 @@ namespace Core    // short for SharpTools
 
             return *this;
         }
+
+
+
+
 
         /**
         * you can use this to remove a handler you previously added.

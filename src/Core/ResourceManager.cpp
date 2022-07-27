@@ -36,6 +36,14 @@ void ResourceManager::init() {
 
     textures.emplace("default", Texture2D("awesomeface.png"));
     textures.emplace("defaultSprite", Texture2D("image.png"));
+    textures.emplace("b_bishop", Texture2D("b_bishop_png_shadow_128px.png"));
+    textures.emplace("b_king", Texture2D("b_king_png_shadow_128px.png"));
+    textures.emplace("b_knight", Texture2D("b_knight_png_shadow_128px.png"));
+    textures.emplace("b_pawn", Texture2D("b_pawn_png_shadow_128px.png"));
+    textures.emplace("b_queen", Texture2D("b_queen_png_shadow_128px.png"));
+    textures.emplace("b_rook", Texture2D("b_rook_png_shadow_128px.png"));
+    textures.emplace("fon_light", Texture2D("square_gray_light_png_shadow_128px.png"));
+    textures.emplace("fon_dark", Texture2D("square_gray_dark_png_shadow_128px.png"));
 
     mMulTextures.emplace("defaultSprite", MultiTexture2D("atlas.png", {1, 2, 3, 4, 5}, 200, 150));
 

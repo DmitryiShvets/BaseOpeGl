@@ -26,6 +26,9 @@ public:
 
     ~EventManager();
 
+    static void eventRoute(Event *e);
+
+
 private:
     EventManager() = default;
 

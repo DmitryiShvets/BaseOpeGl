@@ -28,7 +28,16 @@ EventManager &EventManager::getInstance() {
 }
 
 EventManager::~EventManager() {
-   // std::cout << "Destructor EventManager (" << this << ") called " << std::endl;
+    // std::cout << "Destructor EventManager (" << this << ") called " << std::endl;
     subscribers.clear();
+}
+
+void EventManager::eventRoute(Event *e) {
+    auto &manager = EventManager::getInstance();
+    if (e->getType() == Event::EventType::MOUSE_BUTTON_PRESSED_EVENT) {
+        manager.publish(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, e);
+    }
+
+
 }
 

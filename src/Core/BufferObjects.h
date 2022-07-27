@@ -116,6 +116,19 @@ private:
 };
 
 ///---EXAMPLE------------
+//    GLfloat vertices[] = {
+//            //x   //y   //z  //R    //G   //B
+//            0.0f, 0.0f,   // Top Right
+//            0.0f, 1.0f,    // Bottom Right
+//            1.0f, 1.0f,   // Bottom Left
+//            1.0f, 0.0f  // Top Left
+//    };
+//
+//    GLuint indices[] = {  // Note that we start from 0!
+//            0, 1, 3,  // First Triangle
+//            1, 2, 3   // Second Triangle
+//    };
+//
 //    GLuint VBO1, VAO1, EBO1;
 //
 //

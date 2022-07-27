@@ -9,13 +9,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 
-
-// render line of text
-// -------------------
-
-
-
-
 void TextRenderer::draw(const std::wstring &text, float xOrigin, float yOrigin, float scale, float interval, glm::vec3 color, ShaderProgram *shader, Font *font) {
     {
 

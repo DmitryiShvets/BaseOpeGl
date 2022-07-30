@@ -29,11 +29,11 @@ void Game::init() {
                                      &resourceManager->getProgram("defaultSprite")));
     mSprites.emplace("fon_dark1", Sprite2D(glm::vec2(0.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager->getTexture("fon_dark"),
                                           &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop", Sprite2D(glm::vec2(0.0f, 0.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_rook"),
+    mSprites.emplace("b_bishop", Sprite2D(glm::vec2(200.0f, 200.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_rook"),
                                           &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop1", Sprite2D(glm::vec2(100.0f, 0.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_knight"),
+    mSprites.emplace("b_bishop1", Sprite2D(glm::vec2(300.0f, 200.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_knight"),
                                            &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop2", Sprite2D(glm::vec2(200.0f, 0.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_bishop"),
+    mSprites.emplace("b_bishop2", Sprite2D(glm::vec2(400.0f, 200.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_bishop"),
                                            &resourceManager->getProgram("defaultSprite")));
     mSprites.emplace("b_bishop3", Sprite2D(glm::vec2(300.0f, 0.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_queen"),
                                            &resourceManager->getProgram("defaultSprite")));

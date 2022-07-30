@@ -2,7 +2,9 @@
 // Created by Dmitry on 27.07.2022.
 //
 
+#include <iostream>
 #include "Utilities.h"
+
 void CallbackManager::mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         double xpos, ypos;
@@ -25,4 +27,12 @@ void CallbackManager::key_callback(GLFWwindow *window, int key, int scancode, in
     if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) Application::getInstance().switchState();
 
 
+}
+
+void CallbackManager::cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
+    int width, nowHeight;
+    glfwGetWindowSize(window, &width, &nowHeight);
+    MouseMovedEvent e(xpos,nowHeight- ypos);
+   // std::cout << xpos << " " <<nowHeight- ypos<< "\n";
+    EventManager::eventRoute(&e);
 }

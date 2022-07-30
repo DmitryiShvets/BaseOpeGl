@@ -56,7 +56,7 @@ void Application::init() {
     glfwSetWindowUserPointer(window, this);
     glfwSetKeyCallback(window,CallbackManager::key_callback);
     glfwSetMouseButtonCallback(window, CallbackManager::mouse_button_callback);
-
+    glfwSetCursorPosCallback(window, CallbackManager::cursor_position_callback);
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
 
@@ -77,7 +77,9 @@ void Application::start() {
 
 ///----------Picture---------------------------------------------------------
 
-    SquareNode node(glm::vec2(200, 200), glm::vec2(100, 100));
+    SquareNode node(glm::vec2(200, 200), glm::vec2(100, 100),ChessFraction::WHITE);
+    SquareNode node1(glm::vec2(300, 200), glm::vec2(100, 100),ChessFraction::BLACK);
+    SquareNode node2(glm::vec2(400, 200), glm::vec2(100, 100),ChessFraction::WHITE);
 
 
     double lastTime = glfwGetTime();
@@ -95,6 +97,8 @@ void Application::start() {
         Renderer::clear();
 
         node.render();
+        node1.render();
+        node2.render();
 
         auto end = std::chrono::high_resolution_clock::now();
         auto delta = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();

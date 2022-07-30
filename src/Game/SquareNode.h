@@ -9,19 +9,32 @@
 #include "../Core/ShaderProgram.h"
 #include "../Core/BufferObjects.h"
 #include "../Core/ResourceManager.h"
+#include "../Core/Subscriber.h"
 
+enum class ChessFraction {
+    BLACK = 0, WHITE = 1
+};
 
-class SquareNode : public Object2D {
+class SquareNode : public Object2D, Subscriber {
 public:
-    SquareNode(const glm::vec2 &mPosition, const glm::vec2 &mSize);
+    SquareNode(const glm::vec2 &mPosition, const glm::vec2 &mSize, ChessFraction color);
 
     void render();
 
-private:
+    void update(Event *e) override;
 
+    ~SquareNode() override;
+
+private:
+    glm::vec3 color;
     VAO *mVAO = &ResourceManager::getInstance().baseVAO;
     ShaderProgram *mProgram = &ResourceManager::getInstance().getProgram("default");
 
+    ChessFraction fraction;
+    glm::vec3 defaultColor;
+
+    bool hover = false;
+    bool selected = false;
 };
 
 

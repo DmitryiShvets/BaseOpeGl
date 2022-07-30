@@ -34,18 +34,19 @@ void ResourceManager::init() {
     shaderPrograms.emplace("defaultText", ShaderProgram(readFile("res/textVER.glsl"), readFile("res/textFRG.glsl")));
     shaderPrograms.emplace("defaultControl", ShaderProgram(readFile("res/controlVER.glsl"), readFile("res/controlFRG.glsl")));
 
-    textures.emplace("default", Texture2D("awesomeface.png"));
-    textures.emplace("defaultSprite", Texture2D("image.png"));
-    textures.emplace("b_bishop", Texture2D("b_bishop_png_shadow_128px.png"));
-    textures.emplace("b_king", Texture2D("b_king_png_shadow_128px.png"));
-    textures.emplace("b_knight", Texture2D("b_knight_png_shadow_128px.png"));
-    textures.emplace("b_pawn", Texture2D("b_pawn_png_shadow_128px.png"));
-    textures.emplace("b_queen", Texture2D("b_queen_png_shadow_128px.png"));
-    textures.emplace("b_rook", Texture2D("b_rook_png_shadow_128px.png"));
-    textures.emplace("fon_light", Texture2D("square_gray_light_png_shadow_128px.png"));
-    textures.emplace("fon_dark", Texture2D("square_gray_dark_png_shadow_128px.png"));
 
-    mMulTextures.emplace("defaultSprite", MultiTexture2D("atlas.png", {1, 2, 3, 4, 5}, 200, 150));
+    textures.emplace("default", Texture2D("res/awesomeface.png"));
+    textures.emplace("defaultSprite", Texture2D("res/image.png"));
+    textures.emplace("b_bishop", Texture2D("res/b_bishop_png_shadow_128px.png"));
+    textures.emplace("b_king", Texture2D("res/b_king_png_shadow_128px.png"));
+    textures.emplace("b_knight", Texture2D("res/b_knight_png_shadow_128px.png"));
+    textures.emplace("b_pawn", Texture2D("res/b_pawn_png_shadow_128px.png"));
+    textures.emplace("b_queen", Texture2D("res/b_queen_png_shadow_128px.png"));
+    textures.emplace("b_rook", Texture2D("res/b_rook_png_shadow_128px.png"));
+    textures.emplace("fon_light", Texture2D("res/square_gray_light_png_shadow_128px.png"));
+    textures.emplace("fon_dark", Texture2D("res/square_gray_dark_png_shadow_128px.png"));
+
+    mMulTextures.emplace("defaultSprite", MultiTexture2D("res/atlas.png", {1, 2, 3, 4, 5}, 200, 150));
 
 
     mFonts.emplace("Open-Sans", Font("res/fonts/OpenSans-Bold.ttf"));
@@ -82,7 +83,7 @@ void ResourceManager::destroy() {
     shaderPrograms.clear();
     textures.clear();
     mMulTextures.clear();
-   // mSprites.clear();
+    // mSprites.clear();
     mFonts.clear();
 }
 

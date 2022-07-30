@@ -37,6 +37,9 @@ void EventManager::eventRoute(Event *e) {
     if (e->getType() == Event::EventType::MOUSE_BUTTON_PRESSED_EVENT) {
         manager.publish(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, e);
     }
+    if (e->getType() == Event::EventType::MOUSE_MOVED_EVENT) {
+        manager.publish(Event::EventType::MOUSE_MOVED_EVENT, e);
+    }
 
 
 }

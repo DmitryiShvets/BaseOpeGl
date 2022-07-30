@@ -7,9 +7,8 @@
 #include "Render.h"
 #include "TextRender.h"
 
-Button::Button(const std::wstring &content, const glm::vec2 &position, const glm::vec2 &size) : Subscriber(), mContent(std::move(content)),
-                                                                                                mPos(position),
-                                                                                                mSize(size) {
+Button::Button(const std::wstring &content, const glm::vec2 &position, const glm::vec2 &size) : Subscriber(), Object2D(position, size, 0),
+                                                                                                mContent(std::move(content)) {
 
     program->use();
 
@@ -28,7 +27,7 @@ void Button::render() {
 
     program->use();
     glm::mat4 modelMatrix(1.0f);
-    modelMatrix = glm::translate(modelMatrix, glm::vec3(mPos, 0.0f));
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(mPosition, 0.0f));
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0.5 * mSize.x, 0.5 * mSize.y, 0.0f));
     modelMatrix = glm::rotate(modelMatrix, glm::radians(0.f), glm::vec3(0.0f, 0.0f, 1.0f));
     modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5 * mSize.x, -0.5 * mSize.y, 0.0f));
@@ -38,17 +37,13 @@ void Button::render() {
     Renderer::draw(mVAO);
     program->unbind();
 
-    if (!mContent.empty()) TextRenderer::draw(mContent, mPos.x + 20, mPos.y + 10, 0.4f, 20.0f, glm::vec3(1.0f, 0.8f, 0.2f));
+    if (!mContent.empty()) TextRenderer::draw(mContent, mPosition.x + 20, mPosition.y + 10, 0.4f, 20.0f, glm::vec3(1.0f, 0.8f, 0.2f));
 
 }
 
-bool Button::clicked(double x, double y) {
-    return (x > mPos.x) && (x < mPos.x + mSize.x) && (y > mPos.y) && (y < mPos.y + mSize.y);
-}
 
 void Button::onMouseBtnPressed(int button, double x, double y) {
-    if (clicked(x, y) && button == 0)onClick();
-
+    if (isPointOn(x, y) && button == 0)onClick();
 }
 
 Button::~Button() {

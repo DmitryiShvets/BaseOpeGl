@@ -41,6 +41,23 @@ public:
     virtual std::string format() const = 0;
 };
 
+class MouseMovedEvent : public Event {
+public:
+    MouseMovedEvent(int x, int y)
+            :
+            Event("Mouse moved Event", Event::EventType::MOUSE_MOVED_EVENT),
+            x(x),
+            y(y) {}
+
+    int x, y;
+
+public:
+    std::string format() const override {
+        std::string formatted = name + ": " + std::to_string(x) + ", " + std::to_string(y);
+        return formatted;
+    }
+};
+
 
 class MouseButtonPressedEvent : public Event {
 public:

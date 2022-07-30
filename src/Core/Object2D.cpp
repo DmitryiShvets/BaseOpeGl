@@ -30,4 +30,8 @@ float Object2D::rotation() {
     return mRotation;
 }
 
+bool Object2D::isPointOn(double x, double y) {
+    return (x >= mPosition.x) && (x <= mPosition.x + mSize.x) && (y >= mPosition.y) && (y <= mPosition.y + mSize.y);
+}
+
 

@@ -14,7 +14,7 @@
 
 class Menu;
 
-class Button : public Subscriber {
+class Button : public Subscriber, Object2D {
 public:
     Button(const std::wstring &content, const glm::vec2 &position, const glm::vec2 &size);
 
@@ -22,17 +22,15 @@ public:
 
     Core::Event<void> onClick;
 
-    bool clicked(double x, double y);
-
     void onMouseBtnPressed(int button, double x, double y);
 
-    ~Button() ;
+    ~Button();
 
     void update(Event *e) override;
 
 private:
-    glm::vec2 mPos;
-    glm::vec2 mSize;
+    //   glm::vec2 mPos;
+    //   glm::vec2 mSize;
     VAO *mVAO = &ResourceManager::getInstance().baseVAO;
     std::wstring mContent;
     ShaderProgram *program = &ResourceManager::getInstance().getProgram("defaultControl");

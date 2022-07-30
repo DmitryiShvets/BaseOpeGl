@@ -23,6 +23,9 @@ public:
 
     virtual float rotation();
 
+    bool isPointOn(double x, double y);
+
+
 protected:
     glm::vec2 mPosition;
     glm::vec2 mSize;

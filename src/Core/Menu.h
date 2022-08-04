@@ -11,8 +11,6 @@
 class Menu {
 public:
 
-    Core::Event<void> closeEventHandler;
-
     static Menu &getInstance();
 
     void render();
@@ -25,8 +23,6 @@ private:
 
     Menu(int width, int height);
 
-    //Button btn1(L"Выйти", glm::vec2(10.0f, windowSize.y - 50), glm::vec2(100.0f, 30.0f));
-    // Button btn2(L"Exit", glm::vec2(10.0f, windowSize.y - 100), glm::vec2(100.0f, 30.0f));
     int mWindowWidth;
     int mWindowHeight;
 

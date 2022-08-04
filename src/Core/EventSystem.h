@@ -58,7 +58,6 @@ public:
     }
 };
 
-
 class MouseButtonPressedEvent : public Event {
 public:
     int button;
@@ -77,6 +76,22 @@ public:
         return formatted;
     }
 
+};
+
+class KeyPressedEvent : public Event {
+public:
+    int key;
+public:
+    KeyPressedEvent(int key)
+            :
+            Event("Key Pressed Event", Event::EventType::KEY_PRESSED_EVENT),
+            key(key) {}
+
+public:
+    std::string format() const override {
+        std::string formatted = name + ": " + (char) key;
+        return formatted;
+    }
 };
 
 #endif //BASEOPEGL_EVENTSYSTEM_H

@@ -12,7 +12,7 @@ Button::Button(const std::wstring &content, const glm::vec2 &position, const glm
 
     program->use();
 
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(600));
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(800));
     program->setUniform("projectionMatrix", projection);
     program->setUniform("color", glm::vec3(0.6f, 0.6f, 0.65f));
     program->unbind();

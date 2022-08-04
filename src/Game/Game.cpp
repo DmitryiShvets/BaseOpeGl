@@ -23,31 +23,17 @@ void Game::init() {
     mSprites.emplace("defaultSprite", Sprite2D(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0,
                                                &resourceManager->getMultiTexture("defaultSprite"),
                                                &resourceManager->getProgram("defaultSprite"), 1));
-    mSprites.emplace("fon_light", Sprite2D(glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager->getTexture("fon_light"),
-                                     &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("fon_dark", Sprite2D(glm::vec2(100.0f, 0.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager->getTexture("fon_dark"),
-                                     &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("fon_dark1", Sprite2D(glm::vec2(0.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0, &resourceManager->getTexture("fon_dark"),
-                                          &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop", Sprite2D(glm::vec2(200.0f, 200.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_rook"),
-                                          &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop1", Sprite2D(glm::vec2(300.0f, 200.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_knight"),
-                                           &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop2", Sprite2D(glm::vec2(400.0f, 200.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_bishop"),
-                                           &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop3", Sprite2D(glm::vec2(300.0f, 0.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_queen"),
-                                           &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop4", Sprite2D(glm::vec2(400.0f, 0.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_king"),
-                                           &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop5", Sprite2D(glm::vec2(500.0f, 0.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_bishop"),
-                                           &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop6", Sprite2D(glm::vec2(600.0f, 0.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_knight"),
-                                           &resourceManager->getProgram("defaultSprite")));
-    mSprites.emplace("b_bishop7", Sprite2D(glm::vec2(700.0f, 0.0f), glm::vec2(80.0f, 80.0f), 0, &resourceManager->getTexture("b_rook"),
-                                           &resourceManager->getProgram("defaultSprite")));
 
 
     mVecSpriteAnimators.emplace_back(&getSprite("defaultSprite"), 1, 3, true);
+
+    menu = &Menu::getInstance();
+    menu->btn1.onClick += Core::EventHandler::Bind([this] { if (mGamePaused)closeEventHandler(); });
+    mLvl = new Level();
+    EventManager::getInstance().subscribe(Event::EventType::KEY_PRESSED_EVENT, this);
+
+    mLvl->move("e2", "e4");
+    mLvl->move("e4", "g4");
 
 }
 
@@ -55,20 +41,23 @@ void Game::render() {
 //    for (auto &mVecSprite: mSprites) {
 //        mVecSprite.second.render();
 //    }
+//
+//    getSprite("fon_light").render();
+//    getSprite("fon_dark").render();
+//    getSprite("fon_dark1").render();
+//    getSprite("b_bishop").render();
+//    getSprite("b_bishop1").render();
+//    getSprite("b_bishop2").render();
+//    getSprite("b_bishop3").render();
+//    getSprite("b_bishop4").render();
+//    getSprite("b_bishop5").render();
+//    getSprite("b_bishop6").render();
+//    getSprite("b_bishop7").render();
 
-    getSprite("fon_light").render();
-    getSprite("fon_dark").render();
-    getSprite("fon_dark1").render();
-    getSprite("b_bishop").render();
-    getSprite("b_bishop1").render();
-    getSprite("b_bishop2").render();
-    getSprite("b_bishop3").render();
-    getSprite("b_bishop4").render();
-    getSprite("b_bishop5").render();
-    getSprite("b_bishop6").render();
-    getSprite("b_bishop7").render();
-
-
+    mLvl->render();
+    if (mGamePaused) {
+        menu->render();
+    }
 }
 
 void Game::update(unsigned long long delta) {
@@ -82,7 +71,9 @@ Game::Game(glm::ivec2 windowSize) : mWindowSize(windowSize) {
 
 }
 
-Game::~Game() {}
+Game::~Game() {
+
+}
 
 Sprite2D &Game::getSprite(const std::string &textureName) {
 
@@ -95,7 +86,7 @@ Sprite2D &Game::getSprite(const std::string &textureName) {
 }
 
 Game &Game::getInstance() {
-    static Game instance(glm::ivec2(800, 600));
+    static Game instance(glm::ivec2(800, 800));
 
     return instance;
 }
@@ -103,6 +94,20 @@ Game &Game::getInstance() {
 void Game::destroy() {
     mSprites.clear();
     mVecSpriteAnimators.clear();
+
+    menu->btn1.onClick -= Core::EventHandler::Bind([this] { if (mGamePaused)closeEventHandler(); });
+    EventManager::getInstance().unsubscribe(Event::EventType::KEY_PRESSED_EVENT, this);
+    delete mLvl;
+
+
+}
+
+void Game::update(Event *e) {
+    if (e->getType() == Event::EventType::KEY_PRESSED_EVENT) {
+        auto *event = dynamic_cast<KeyPressedEvent * >(e);
+        if (event->key == 257)mGamePaused = !mGamePaused;
+
+    }
 }
 
 

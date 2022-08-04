@@ -34,4 +34,20 @@ bool Object2D::isPointOn(double x, double y) {
     return (x >= mPosition.x) && (x <= mPosition.x + mSize.x) && (y >= mPosition.y) && (y <= mPosition.y + mSize.y);
 }
 
+Object2D &Object2D::operator=(Object2D &&object2D) noexcept {
+    if (this != &object2D) {
+        mPosition = object2D.mPosition;
+        mRotation = object2D.mRotation;
+        mSize = object2D.mSize;
+
+    }
+    return *this;
+}
+
+Object2D::Object2D(Object2D &&object2D) noexcept {
+    mPosition = object2D.mPosition;
+    mRotation = object2D.mRotation;
+    mSize = object2D.mSize;
+}
+
 

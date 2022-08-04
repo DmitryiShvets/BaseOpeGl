@@ -16,7 +16,7 @@
 
 #include "ResourceManager.h"
 #include "../Game/Game.h"
-#include "Menu.h"
+
 
 class Application {
 public:
@@ -36,23 +36,17 @@ public:
 
     Application &operator=(const Application &) = delete;
 
-    void switchState();
 
 private:
     Application(std::string name, int width, int height);
 
-    ResourceManager *resourceManager = nullptr;
-
-    Game *game = nullptr;
-
-    Menu *menu = nullptr;
-    // Window &window;
     std::string name;
     int width;
     int height;
-    GLFWwindow *window = nullptr;
 
-    bool gWindowPaused = false;
+    GLFWwindow *window = nullptr;
+    ResourceManager *resourceManager = nullptr;
+    Game *game = nullptr;
 
 };
 

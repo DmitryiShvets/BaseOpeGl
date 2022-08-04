@@ -9,9 +9,9 @@
 
 void SquareNode::render() {
 
-    if (selected)color = glm::vec3(0.6f, 0.6f, 0.65f); //При выборе поля
-    if (!selected && hover)color = glm::vec3(0.0f, 1.0f, 0.0f); //При наведении
-    if (!selected && !hover)color = defaultColor; //По умолчанию
+    if (mSelected)mColor = glm::vec3(0.92f, 0.67f, 0.25f); //При выборе поля
+    if (!mSelected && mHover)mColor = glm::vec3(0.0f, 0.75f, 0.0f); //При наведении
+    if (!mSelected && !mHover)mColor = mDefaultColor; //По умолчанию
 
 
     glm::mat4 modelMatrix(1.0f);
@@ -24,24 +24,26 @@ void SquareNode::render() {
 
 
     mProgram->use();
-    mProgram->setUniform("vertexColor", color);
+    mProgram->setUniform("vertexColor", mColor);
     mProgram->setUniform("modelMatrix", modelMatrix);
     Renderer::draw(mVAO);
     mProgram->unbind();
+
+    if (mFigure) mFigure->render();
 }
 
 
 SquareNode::SquareNode(const glm::vec2 &mPosition, const glm::vec2 &mSize, ChessFraction _fraction) : Object2D(mPosition, mSize, 0.f),
-                                                                                                      fraction(_fraction) {
+                                                                                                      mFraction(_fraction) {
 
-    if (fraction == ChessFraction::WHITE)defaultColor = glm::vec3(1.0, 1.0, 1.0);
-    if (fraction == ChessFraction::BLACK)defaultColor = glm::vec3(0.0, 0.0, 0.0);
+    if (mFraction == ChessFraction::WHITE)mDefaultColor = glm::vec3(0.95f, 0.85f, 0.65f);
+    if (mFraction == ChessFraction::BLACK)mDefaultColor = glm::vec3(0.44f, 0.35f, 0.16f);
 
 
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(600));
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(800));
 
     mProgram->use();
-    mProgram->setUniform("vertexColor", color);
+    mProgram->setUniform("vertexColor", mColor);
     mProgram->setUniform("projectionMatrix", projection);
     mProgram->unbind();
 
@@ -52,13 +54,13 @@ SquareNode::SquareNode(const glm::vec2 &mPosition, const glm::vec2 &mSize, Chess
 void SquareNode::update(Event *e) {
     if (e->getType() == Event::EventType::MOUSE_MOVED_EVENT) {
         auto *event = dynamic_cast<MouseMovedEvent * >(e);
-        if (isPointOn(event->x, event->y)) hover = true;
-        else hover = false;
+        if (isPointOn(event->x, event->y)) mHover = true;
+        else mHover = false;
     }
     if (e->getType() == Event::EventType::MOUSE_BUTTON_PRESSED_EVENT) {
         auto *event = dynamic_cast<MouseButtonPressedEvent * >(e);
-        if (isPointOn(event->x, event->y))selected = !selected;
-        else selected = false;
+        if (isPointOn(event->x, event->y))mSelected = !mSelected;
+        else mSelected = false;
     }
 
 }
@@ -66,4 +68,63 @@ void SquareNode::update(Event *e) {
 SquareNode::~SquareNode() {
     EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_MOVED_EVENT, this);
     EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, this);
+    delete mFigure;
+}
+
+SquareNode &SquareNode::operator=(SquareNode &&node) noexcept {
+    if (this != &node) {
+        mColor = node.mColor;
+        mDefaultColor = node.mDefaultColor;
+        mSelected = node.mSelected;
+        mHover = node.mHover;
+        mFraction = node.mFraction;
+
+        mProgram = node.mProgram;
+        mVAO = node.mVAO;
+
+        node.mProgram = nullptr;
+        node.mVAO = nullptr;
+
+        EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_MOVED_EVENT, &node);
+        EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, &node);
+
+        EventManager::getInstance().subscribe(Event::EventType::MOUSE_MOVED_EVENT, this);
+        EventManager::getInstance().subscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, this);
+
+    }
+    return *this;
+}
+
+SquareNode::SquareNode(SquareNode &&node) noexcept: Object2D(std::move(node)) {
+    mColor = node.mColor;
+    mDefaultColor = node.mDefaultColor;
+    mSelected = node.mSelected;
+    mHover = node.mHover;
+    mFraction = node.mFraction;
+
+    mProgram = node.mProgram;
+    mVAO = node.mVAO;
+
+    node.mProgram = nullptr;
+    node.mVAO = nullptr;
+
+    EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_MOVED_EVENT, &node);
+    EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, &node);
+
+    EventManager::getInstance().subscribe(Event::EventType::MOUSE_MOVED_EVENT, this);
+    EventManager::getInstance().subscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, this);
+}
+
+void SquareNode::setFigure(Figure::FigureType type, int side) {
+    mFigure = new Figure(side, type, glm::vec2(mPosition.x + 10, mPosition.y + 3));
+}
+
+void SquareNode::deleteFigure() {
+    delete mFigure;
+}
+
+void SquareNode::swapFigure(Figure *figure) {
+    if (mFigure)delete mFigure;
+    mFigure = figure;
+    mFigure->setPosition(glm::vec2(mPosition.x + 10, mPosition.y + 3));
 }

@@ -60,10 +60,10 @@ add_executable(${PROJECT_NAME} test1.cpp
         src/Core/Utilities.h
        # greko/greko.cpp
        # greko/greko.h
-        )
+        src/Game/Level.cpp src/Game/Level.h src/Game/Figure.cpp src/Game/Figure.h)
 
-#target_link_libraries(${PROJECT_NAME} glfw glm libopengl32.a glew32.lib freetype.lib )
-target_link_libraries(${PROJECT_NAME} glfw glm libGL.so libGLEW.so libfreetype.so greko)
+target_link_libraries(${PROJECT_NAME} glfw glm libopengl32.a glew32.lib freetype.lib greko )
+#target_link_libraries(${PROJECT_NAME} glfw glm libGL.so libGLEW.so libfreetype.so greko)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)
 

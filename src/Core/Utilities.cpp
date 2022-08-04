@@ -16,23 +16,24 @@ void CallbackManager::mouse_button_callback(GLFWwindow *window, int button, int 
         EventManager::eventRoute(&e);
 //        if (BtnPressed(xpos, nowHeight - ypos, Game::getInstance().getSprite("defaultSprite")))
 //            std::cout << "sprite - clicked!!!" << std::endl;
-//        else std::cout << "click - x: " << xpos << " y: " << nowHeight - ypos << std::endl;
-
+//        else
+        std::cout << "click - x: " << xpos << " y: " << nowHeight - ypos << std::endl;
     }
 }
 
 void CallbackManager::key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
-    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) Application::getInstance().switchState();
-
-
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
+        KeyPressedEvent e(key);
+        EventManager::eventRoute(&e);
+    }
 }
 
 void CallbackManager::cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
     int width, nowHeight;
     glfwGetWindowSize(window, &width, &nowHeight);
-    MouseMovedEvent e(xpos,nowHeight- ypos);
-   // std::cout << xpos << " " <<nowHeight- ypos<< "\n";
+    MouseMovedEvent e(xpos, nowHeight - ypos);
+    // std::cout << xpos << " " <<nowHeight- ypos<< "\n";
     EventManager::eventRoute(&e);
 }

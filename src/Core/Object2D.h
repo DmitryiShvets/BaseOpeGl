@@ -25,6 +25,16 @@ public:
 
     bool isPointOn(double x, double y);
 
+    Object2D() = delete;
+
+    Object2D(Object2D &) = delete;
+
+    Object2D &operator=(const Object2D &) = delete;
+
+    Object2D &operator=(Object2D &&object2D) noexcept;
+
+    Object2D(Object2D &&object2D) noexcept;
+
 
 protected:
     glm::vec2 mPosition;

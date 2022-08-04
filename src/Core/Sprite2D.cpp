@@ -262,7 +262,7 @@ Sprite2D &Sprite2D::operator=(Sprite2D &&sprite2D) noexcept {
     return *this;
 }
 
-Sprite2D::Sprite2D(Sprite2D &&sprite2D) noexcept: Object2D(sprite2D) {
+Sprite2D::Sprite2D(Sprite2D &&sprite2D) noexcept: Object2D(std::move(sprite2D)) {
     mTexture = sprite2D.mTexture;
     mProgram = sprite2D.mProgram;
     mVAO = std::move(sprite2D.mVAO);

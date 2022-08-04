@@ -24,7 +24,7 @@ void TextRenderer::draw(const std::wstring &text, float xOrigin, float yOrigin, 
         shader->use();
         shader->setUniform("textColor", color);
 
-        glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(600));
+        glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(800));
 
         shader->setUniform("projection", projection);
         // glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));

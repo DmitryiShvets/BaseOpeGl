@@ -9,11 +9,12 @@
 #include "../Core/SpriteAnimator.h"
 #include "../Core/ResourceManager.h"
 #include <glm/vec2.hpp>
-
+#include "Level.h"
+#include "../Core/Menu.h"
 #include <vector>
 
 
-class Game {
+class Game : public Subscriber {
 public:
     static Game &getInstance();
 
@@ -29,6 +30,10 @@ public:
 
     Sprite2D &getSprite(const std::string &textureName);
 
+    void update(Event *e) override;
+
+    Core::Event<void> closeEventHandler;
+
 
 private:
     Game(glm::ivec2 windowSize);
@@ -37,7 +42,14 @@ private:
     //std::vector<Sprite2D> mVecSprites;
     std::vector<SpriteAnimator> mVecSpriteAnimators;
     std::map<std::string, Sprite2D> mSprites;
-    ResourceManager *resourceManager;
+
+    ResourceManager *resourceManager = nullptr;
+
+    Level *mLvl = nullptr;
+
+    Menu *menu = nullptr;
+
+    bool mGamePaused = false;
 
 };
 

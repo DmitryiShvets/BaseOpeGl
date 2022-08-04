@@ -13,7 +13,6 @@
 #include "EventManager.h"
 #include "Render.h"
 #include "Utilities.h"
-#include "../Game/SquareNode.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -22,7 +21,7 @@ Application::Application(std::string name, int width, int height) : name(std::mo
                                                                     height(height) {}
 
 Application &Application::getInstance() {
-    static Application instance("Window", 800, 600);
+    static Application instance("Window", 800, 800);
     return instance;
 }
 
@@ -68,20 +67,15 @@ void Application::init() {
     resourceManager->init();
 
     game = &Game::getInstance();
+    game->closeEventHandler += Core::EventHandler::Bind(&Application::close, this);
     game->init();
 
-    menu = &Menu::getInstance();
-    menu->closeEventHandler += Core::EventHandler::Bind(&Application::close, this);
 
 }
 
 void Application::start() {
 
 ///----------Picture---------------------------------------------------------
-
-    SquareNode node(glm::vec2(200, 200), glm::vec2(100, 100), ChessFraction::WHITE);
-    SquareNode node1(glm::vec2(300, 200), glm::vec2(100, 100), ChessFraction::BLACK);
-    SquareNode node2(glm::vec2(400, 200), glm::vec2(100, 100), ChessFraction::WHITE);
 
 
     double lastTime = glfwGetTime();
@@ -90,15 +84,15 @@ void Application::start() {
     auto start = std::chrono::high_resolution_clock::now();
 
     Renderer::setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-    Greko greko;
-    greko.init(WHITE);
-
-    greko.MakeMovePlayer("e2e4");
-    std::cout << "Компьютер сделал ход : " << greko.MakeMoveEngine() << std::endl;
-
-    greko.MakeMovePlayer("d2d4");
-    std::cout << "Компьютер сделал ход : " << greko.MakeMoveEngine() << std::endl;
+//
+//    Greko greko;
+//    greko.init(WHITE);
+//
+//    greko.MakeMovePlayer("e2e4");
+//    std::cout << "Компьютер сделал ход : " << greko.MakeMoveEngine() << std::endl;
+//
+//    greko.MakeMovePlayer("d2d4");
+//    std::cout << "Компьютер сделал ход : " << greko.MakeMoveEngine() << std::endl;
 
 
     // Game loop
@@ -109,21 +103,17 @@ void Application::start() {
 
         Renderer::clear();
 
-        node.render();
-        node1.render();
-        node2.render();
 
         auto end = std::chrono::high_resolution_clock::now();
         auto delta = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
         start = end;
 
 
+
         game->update(delta);
         game->render();
 
-        if (gWindowPaused) {
-            menu->render();
-        }
+
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -146,13 +136,8 @@ void Application::close() {
     glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-
-void Application::switchState() {
-    gWindowPaused = !gWindowPaused;
-}
-
-
 Application::~Application() {
-    menu->closeEventHandler -= Core::EventHandler::Bind(&Application::close, this);
+    game->closeEventHandler -= Core::EventHandler::Bind(&Application::close, this);
+
 }
 

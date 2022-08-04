@@ -35,3 +35,4 @@ glm
 *.exe
 *.out
 *.app
+/greko/

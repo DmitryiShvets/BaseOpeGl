@@ -5,7 +5,7 @@
 #include "Application.h"
 //#include "glm/gtc/matrix_transform.hpp"
 
-
+#include "greko.h"
 #include <iostream>
 #include <utility>
 #include <chrono>
@@ -18,7 +18,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-Application::Application(std::string name, int width, int height) : name(std::move(name)), width(width), height(height) {}
+Application::Application(std::string name, int width, int height) : name(std::move(name)), width(width),
+                                                                    height(height) {}
 
 Application &Application::getInstance() {
     static Application instance("Window", 800, 600);
@@ -47,6 +48,7 @@ void Application::init() {
         exit(EXIT_FAILURE);
     }
 
+
     glfwMakeContextCurrent(window);
 
     if (glewInit() != GLEW_OK) {
@@ -54,7 +56,7 @@ void Application::init() {
         exit(EXIT_FAILURE);
     }
     glfwSetWindowUserPointer(window, this);
-    glfwSetKeyCallback(window,CallbackManager::key_callback);
+    glfwSetKeyCallback(window, CallbackManager::key_callback);
     glfwSetMouseButtonCallback(window, CallbackManager::mouse_button_callback);
     glfwSetCursorPosCallback(window, CallbackManager::cursor_position_callback);
     int w, h;
@@ -77,9 +79,9 @@ void Application::start() {
 
 ///----------Picture---------------------------------------------------------
 
-    SquareNode node(glm::vec2(200, 200), glm::vec2(100, 100),ChessFraction::WHITE);
-    SquareNode node1(glm::vec2(300, 200), glm::vec2(100, 100),ChessFraction::BLACK);
-    SquareNode node2(glm::vec2(400, 200), glm::vec2(100, 100),ChessFraction::WHITE);
+    SquareNode node(glm::vec2(200, 200), glm::vec2(100, 100), ChessFraction::WHITE);
+    SquareNode node1(glm::vec2(300, 200), glm::vec2(100, 100), ChessFraction::BLACK);
+    SquareNode node2(glm::vec2(400, 200), glm::vec2(100, 100), ChessFraction::WHITE);
 
 
     double lastTime = glfwGetTime();
@@ -88,6 +90,17 @@ void Application::start() {
     auto start = std::chrono::high_resolution_clock::now();
 
     Renderer::setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+    Greko greko;
+    greko.init(WHITE);
+
+    greko.MakeMovePlayer("e2e4");
+    std::cout << "Компьютер сделал ход : " << greko.MakeMoveEngine() << std::endl;
+
+    greko.MakeMovePlayer("d2d4");
+    std::cout << "Компьютер сделал ход : " << greko.MakeMoveEngine() << std::endl;
+
+
     // Game loop
     while (!glfwWindowShouldClose(window)) {
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions

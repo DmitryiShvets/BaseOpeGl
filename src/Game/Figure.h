@@ -5,7 +5,7 @@
 #ifndef BASEOPEGL_FIGURE_H
 #define BASEOPEGL_FIGURE_H
 
-#include "../Core/Sprite2D.h"
+#include "../Render/Sprite2D.h"
 
 class Figure {
 public:

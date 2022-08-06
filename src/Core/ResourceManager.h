@@ -7,12 +7,12 @@
 
 #include <string>
 #include <map>
-#include "ShaderProgram.h"
-#include "Texture2D.h"
-#include "MultiTexture2D.h"
-#include "Sprite2D.h"
-#include "Font.h"
-#include "BufferObjects.h"
+#include "../Render/ShaderProgram.h"
+#include "../Render/Texture2D.h"
+#include "../Render/MultiTexture2D.h"
+#include "../Render/Sprite2D.h"
+#include "../Render/Font.h"
+#include "../Render/BufferObjects.h"
 
 class ResourceManager {
 public:

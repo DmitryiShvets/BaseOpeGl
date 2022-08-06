@@ -6,9 +6,6 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-
-bool BtnPressed(int x, int y, Sprite2D &sprite2D);
-
 void Game::init() {
 
     resourceManager = &ResourceManager::getInstance();
@@ -27,13 +24,10 @@ void Game::init() {
 
     mVecSpriteAnimators.emplace_back(&getSprite("defaultSprite"), 1, 3, true);
 
-    menu = &Menu::getInstance();
-    menu->btn1.onClick += Core::EventHandler::Bind([this] { if (mGamePaused)closeEventHandler(); });
-    mLvl = new Level();
-    EventManager::getInstance().subscribe(Event::EventType::KEY_PRESSED_EVENT, this);
 
-    mLvl->move("e2", "e4");
-    mLvl->move("e4", "g4");
+
+
+    mLvl = new Level();
 
 }
 
@@ -41,53 +35,32 @@ void Game::render() {
 //    for (auto &mVecSprite: mSprites) {
 //        mVecSprite.second.render();
 //    }
-//
-//    getSprite("fon_light").render();
-//    getSprite("fon_dark").render();
-//    getSprite("fon_dark1").render();
-//    getSprite("b_bishop").render();
-//    getSprite("b_bishop1").render();
-//    getSprite("b_bishop2").render();
-//    getSprite("b_bishop3").render();
-//    getSprite("b_bishop4").render();
-//    getSprite("b_bishop5").render();
-//    getSprite("b_bishop6").render();
-//    getSprite("b_bishop7").render();
 
-    mLvl->render();
-    if (mGamePaused) {
-        menu->render();
-    }
+
+  mLvl->render();
+
 }
 
 void Game::update(unsigned long long delta) {
     for (auto &mVecSpriteAnimator: mVecSpriteAnimators) {
         mVecSpriteAnimator.update(delta);
     }
-
 }
 
-Game::Game(glm::ivec2 windowSize) : mWindowSize(windowSize) {
+Game::Game(glm::ivec2 windowSize) : mWindowSize(windowSize) {}
 
-}
-
-Game::~Game() {
-
-}
+Game::~Game() {}
 
 Sprite2D &Game::getSprite(const std::string &textureName) {
-
     auto it = mSprites.find(textureName);
     if (it != mSprites.end()) {
         return it->second;
     }
     return mSprites.find("defaultSprite")->second;
-
 }
 
 Game &Game::getInstance() {
-    static Game instance(glm::ivec2(800, 800));
-
+    static Game instance(glm::vec2(900, 900));
     return instance;
 }
 
@@ -95,20 +68,10 @@ void Game::destroy() {
     mSprites.clear();
     mVecSpriteAnimators.clear();
 
-    menu->btn1.onClick -= Core::EventHandler::Bind([this] { if (mGamePaused)closeEventHandler(); });
-    EventManager::getInstance().unsubscribe(Event::EventType::KEY_PRESSED_EVENT, this);
     delete mLvl;
-
-
 }
 
-void Game::update(Event *e) {
-    if (e->getType() == Event::EventType::KEY_PRESSED_EVENT) {
-        auto *event = dynamic_cast<KeyPressedEvent * >(e);
-        if (event->key == 257)mGamePaused = !mGamePaused;
 
-    }
-}
 
 
 

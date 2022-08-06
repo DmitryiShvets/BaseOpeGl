@@ -35,13 +35,25 @@ EventManager::~EventManager() {
 void EventManager::eventRoute(Event *e) {
     auto &manager = EventManager::getInstance();
     if (e->getType() == Event::EventType::MOUSE_BUTTON_PRESSED_EVENT) {
-        manager.publish(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, e);
+        manager.publish(e->getType(), e);
     }
     if (e->getType() == Event::EventType::MOUSE_MOVED_EVENT) {
         manager.publish(Event::EventType::MOUSE_MOVED_EVENT, e);
     }
+    if (e->getType() == Event::EventType::NODE_SELECTED_EVENT) {
+        manager.publish(Event::EventType::NODE_SELECTED_EVENT, e);
+    }
+    if (e->getType() == Event::EventType::NODE_UNSELECTED_EVENT) {
+        manager.publish(Event::EventType::NODE_UNSELECTED_EVENT, e);
+    }
     if (e->getType() == Event::EventType::KEY_PRESSED_EVENT) {
         manager.publish(Event::EventType::KEY_PRESSED_EVENT, e);
+    }
+    if (e->getType() == Event::EventType::MOVE_FIGURE_EVENT) {
+        manager.publish(Event::EventType::MOVE_FIGURE_EVENT, e);
+    }
+    if (e->getType() == Event::EventType::GAME_END_EVENT) {
+        manager.publish(Event::EventType::GAME_END_EVENT, e);
     }
 
 }

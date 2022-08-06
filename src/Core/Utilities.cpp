@@ -34,6 +34,5 @@ void CallbackManager::cursor_position_callback(GLFWwindow *window, double xpos, 
     int width, nowHeight;
     glfwGetWindowSize(window, &width, &nowHeight);
     MouseMovedEvent e(xpos, nowHeight - ypos);
-    // std::cout << xpos << " " <<nowHeight- ypos<< "\n";
     EventManager::eventRoute(&e);
 }

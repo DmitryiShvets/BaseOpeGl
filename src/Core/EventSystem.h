@@ -20,15 +20,16 @@ public:
         KEY_REPEATED_EVENT,
         WINDOW_RESIZED_EVENT,
         WINDOW_CLOSED_EVENT,
+        NODE_SELECTED_EVENT,
+        NODE_UNSELECTED_EVENT,
+        MOVE_FIGURE_EVENT,
+        GAME_END_EVENT
     };
 protected:
     EventType type;
     std::string name;
 protected:
-    Event(const std::string &name, EventType type)
-            :
-            name(name),
-            type(type) {}
+    Event(const std::string &name, EventType type) : name(name), type(type) {}
 
 public:
     virtual ~Event() = default;
@@ -38,7 +39,7 @@ public:
 
     inline EventType getType() const { return type; }
 
-    virtual std::string format() const = 0;
+
 };
 
 class MouseMovedEvent : public Event {
@@ -51,11 +52,6 @@ public:
 
     int x, y;
 
-public:
-    std::string format() const override {
-        std::string formatted = name + ": " + std::to_string(x) + ", " + std::to_string(y);
-        return formatted;
-    }
 };
 
 class MouseButtonPressedEvent : public Event {
@@ -70,11 +66,6 @@ public:
             Event("Mouse button pressed", Event::EventType::MOUSE_BUTTON_PRESSED_EVENT),
             button(button), x(x), y(y) {}
 
-public:
-    std::string format() const override {
-        std::string formatted = name + ": " + std::to_string(button);
-        return formatted;
-    }
 
 };
 
@@ -82,16 +73,51 @@ class KeyPressedEvent : public Event {
 public:
     int key;
 public:
-    KeyPressedEvent(int key)
-            :
-            Event("Key Pressed Event", Event::EventType::KEY_PRESSED_EVENT),
-            key(key) {}
+    KeyPressedEvent(int key) : Event("Key Pressed Event", Event::EventType::KEY_PRESSED_EVENT), key(key) {}
 
-public:
-    std::string format() const override {
-        std::string formatted = name + ": " + (char) key;
-        return formatted;
-    }
+
 };
+
+class NodeSelectedEvent : public Event {
+public:
+    NodeSelectedEvent(const std::string &nodeName) : Event("Node Selected Event", Event::EventType::NODE_SELECTED_EVENT), nodeName(nodeName) {}
+
+    ~NodeSelectedEvent() override = default;
+
+    std::string nodeName;
+};
+
+class NodeUnselectedEvent : public Event {
+public:
+    NodeUnselectedEvent(const std::string &nodeName) : Event("Node Unselected Event", Event::EventType::NODE_UNSELECTED_EVENT), nodeName(nodeName) {}
+
+    ~NodeUnselectedEvent() override = default;
+
+    std::string nodeName;
+};
+
+class MoveFigureEvent : public Event {
+public:
+    MoveFigureEvent(const std::string &src, const std::string &dist) : Event("Move Figure Event", Event::EventType::MOVE_FIGURE_EVENT),
+                                                                       srcNodeName(src), distNodeName(dist) {}
+
+    ~MoveFigureEvent() override = default;
+
+    std::string srcNodeName;
+    std::string distNodeName;
+};
+
+class GameEndEvent : public Event {
+public:
+    GameEndEvent(std::string _result, std::string _comment) : Event("Move Figure Event", Event::EventType::GAME_END_EVENT),
+                                                              result(std::move(_result)), comment(std::move(_comment)) {}
+
+    ~GameEndEvent() override = default;
+
+    std::string result;
+    std::string comment;
+
+};
+
 
 #endif //BASEOPEGL_EVENTSYSTEM_H

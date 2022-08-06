@@ -5,23 +5,25 @@
 #include "Application.h"
 //#include "glm/gtc/matrix_transform.hpp"
 
-#include "greko.h"
+//#include "greko.h"
 #include <iostream>
 #include <utility>
 #include <chrono>
 
-#include "EventManager.h"
-#include "Render.h"
-#include "Utilities.h"
+#include "Core/EventManager.h"
+#include "Render/Render.h"
+#include "Core/Utilities.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
+#include "Core/Label.h"
 
 Application::Application(std::string name, int width, int height) : name(std::move(name)), width(width),
                                                                     height(height) {}
 
 Application &Application::getInstance() {
-    static Application instance("Window", 800, 800);
+    static Application instance("Window", 900, 900);
     return instance;
 }
 
@@ -67,10 +69,15 @@ void Application::init() {
     resourceManager->init();
 
     game = &Game::getInstance();
-    game->closeEventHandler += Core::EventHandler::Bind(&Application::close, this);
     game->init();
 
+    menu = &Menu::getInstance();
+    menu->btn1.onClick += Core::EventHandler::Bind([this] { if (mGamePaused)close(); });
+    menu->btn2.onClick += Core::EventHandler::Bind([this] { mGamePlay = !mGamePlay; });
 
+
+    EventManager::getInstance().subscribe(Event::EventType::KEY_PRESSED_EVENT, this);
+    EventManager::getInstance().subscribe(Event::EventType::GAME_END_EVENT, this);
 }
 
 void Application::start() {
@@ -84,17 +91,8 @@ void Application::start() {
     auto start = std::chrono::high_resolution_clock::now();
 
     Renderer::setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-//
-//    Greko greko;
-//    greko.init(WHITE);
-//
-//    greko.MakeMovePlayer("e2e4");
-//    std::cout << "Компьютер сделал ход : " << greko.MakeMoveEngine() << std::endl;
-//
-//    greko.MakeMovePlayer("d2d4");
-//    std::cout << "Компьютер сделал ход : " << greko.MakeMoveEngine() << std::endl;
 
-
+   // Label label(glm::vec2(50, 0), glm::vec2(100, 50), glm::vec3(1.0f, 1.0f, 1.0f), L"S");
     // Game loop
     while (!glfwWindowShouldClose(window)) {
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
@@ -109,11 +107,14 @@ void Application::start() {
         start = end;
 
 
+        if (mGamePlay) {
+            game->update(delta);
+            game->render();
+        }
 
-        game->update(delta);
-        game->render();
+        if (mGamePaused) menu->render();
 
-
+     //   label.render();
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -137,7 +138,26 @@ void Application::close() {
 }
 
 Application::~Application() {
-    game->closeEventHandler -= Core::EventHandler::Bind(&Application::close, this);
 
+
+    menu->btn1.onClick -= Core::EventHandler::Bind([this] { if (mGamePaused)close(); });
+    menu->btn2.onClick -= Core::EventHandler::Bind([this] { mGamePlay = !mGamePlay; });
+
+
+    EventManager::getInstance().unsubscribe(Event::EventType::KEY_PRESSED_EVENT, this);
+    EventManager::getInstance().unsubscribe(Event::EventType::GAME_END_EVENT, this);
+}
+
+void Application::update(Event *e) {
+    if (e->getType() == Event::EventType::KEY_PRESSED_EVENT) {
+        auto *event = dynamic_cast<KeyPressedEvent * >(e);
+        if (event->key == 257)mGamePaused = !mGamePaused;
+
+    }
+    if (e->getType() == Event::EventType::GAME_END_EVENT) {
+        auto *event = dynamic_cast<GameEndEvent * >(e);
+        mGamePlay = false;
+
+    }
 }
 

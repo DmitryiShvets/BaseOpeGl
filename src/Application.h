@@ -14,11 +14,11 @@
 
 #include "GLFW/glfw3.h"
 
-#include "ResourceManager.h"
-#include "../Game/Game.h"
+#include "Core/ResourceManager.h"
+#include "Game/Game.h"
+#include "Core/Menu.h"
 
-
-class Application {
+class Application : public Subscriber {
 public:
     static Application &getInstance();
 
@@ -36,6 +36,8 @@ public:
 
     Application &operator=(const Application &) = delete;
 
+    void update(Event *e) override;
+
 
 private:
     Application(std::string name, int width, int height);
@@ -47,6 +49,12 @@ private:
     GLFWwindow *window = nullptr;
     ResourceManager *resourceManager = nullptr;
     Game *game = nullptr;
+    Menu *menu = nullptr;
+
+
+    bool mGamePaused = false;
+    bool mGamePlay = true;
+
 
 };
 

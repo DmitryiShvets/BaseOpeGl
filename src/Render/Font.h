@@ -8,7 +8,7 @@
 #include <string>
 #include "BufferObjects.h"
 #include <map>
-#include <glm/mat4x4.hpp>
+#include "glm/mat4x4.hpp"
 
 struct Character {
     unsigned int TextureID;  // ID handle of the glyph texture

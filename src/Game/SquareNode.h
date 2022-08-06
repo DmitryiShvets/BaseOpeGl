@@ -5,9 +5,9 @@
 #ifndef BASEOPEGL_SQUARENODE_H
 #define BASEOPEGL_SQUARENODE_H
 
-#include "../Core/Object2D.h"
-#include "../Core/ShaderProgram.h"
-#include "../Core/BufferObjects.h"
+#include "../Render/Object2D.h"
+#include "../Render/ShaderProgram.h"
+#include "../Render/BufferObjects.h"
 #include "../Core/ResourceManager.h"
 #include "../Core/Subscriber.h"
 #include "Figure.h"
@@ -18,7 +18,7 @@ enum class ChessFraction {
 
 class SquareNode : public Object2D, Subscriber {
 public:
-    SquareNode(const glm::vec2 &mPosition, const glm::vec2 &mSize, ChessFraction color);
+    SquareNode(const std::string &name, const glm::vec2 &mPosition, ChessFraction color);
 
     void render();
 
@@ -44,6 +44,8 @@ public:
 
     Figure *mFigure = nullptr;
 private:
+
+    std::string mNodeName;
     glm::vec3 mColor;
     glm::vec3 mDefaultColor;
 
@@ -54,6 +56,8 @@ private:
 
     VAO *mVAO = &ResourceManager::getInstance().baseVAO;
     ShaderProgram *mProgram = &ResourceManager::getInstance().getProgram("default");
+
+    std::string mSelectedNode;
 
 };
 

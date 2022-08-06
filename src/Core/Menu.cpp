@@ -11,6 +11,8 @@ Menu::Menu(int width, int height) : mWindowWidth(width), mWindowHeight(height),
 }
 
 void Menu::render() {
+
+
     btn1.render();
     btn2.render();
 }
@@ -20,7 +22,7 @@ Menu::~Menu() {
 }
 
 Menu &Menu::getInstance() {
-    static Menu instance(800, 800);
+    static Menu instance(900, 900);
     return instance;
 }
 

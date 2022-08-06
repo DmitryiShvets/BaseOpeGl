@@ -6,7 +6,7 @@
 #define BASEOPEGL_TEXTRENDER_H
 
 
-#include "ResourceManager.h"
+#include "../Core/ResourceManager.h"
 
 
 class TextRenderer {

@@ -5,16 +5,16 @@
 #ifndef BASEOPEGL_GAME_H
 #define BASEOPEGL_GAME_H
 
-#include "../Core/Sprite2D.h"
-#include "../Core/SpriteAnimator.h"
+#include "../Render/Sprite2D.h"
+#include "../Render/SpriteAnimator.h"
 #include "../Core/ResourceManager.h"
 #include <glm/vec2.hpp>
 #include "Level.h"
-#include "../Core/Menu.h"
+
 #include <vector>
 
 
-class Game : public Subscriber {
+class Game  {
 public:
     static Game &getInstance();
 
@@ -30,11 +30,6 @@ public:
 
     Sprite2D &getSprite(const std::string &textureName);
 
-    void update(Event *e) override;
-
-    Core::Event<void> closeEventHandler;
-
-
 private:
     Game(glm::ivec2 windowSize);
 
@@ -47,9 +42,6 @@ private:
 
     Level *mLvl = nullptr;
 
-    Menu *menu = nullptr;
-
-    bool mGamePaused = false;
 
 };
 

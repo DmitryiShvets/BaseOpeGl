@@ -16,40 +16,40 @@ add_subdirectory(glm)
 add_subdirectory(greko)
 
 add_executable(${PROJECT_NAME} test1.cpp
-        src/Core/ShaderProgram.cpp
-        src/Core/ShaderProgram.h
+        src/Render/ShaderProgram.cpp
+        src/Render/ShaderProgram.h
         src/Core/ResourceManager.cpp
         src/Core/ResourceManager.h
         src/stb_image.h
-        src/Core/Texture2D.cpp
-        src/Core/Texture2D.h
-        src/Core/Sprite2D.cpp
-        src/Core/Sprite2D.h
-        src/Core/MultiTexture2D.cpp
-        src/Core/MultiTexture2D.h
-        src/Core/SubTexture2D.cpp
-        src/Core/SubTexture2D.h
-        src/Core/Object2D.cpp
-        src/Core/Object2D.h
-        src/Core/SpriteAnimator.cpp
-        src/Core/SpriteAnimator.h
+        src/Render/Texture2D.cpp
+        src/Render/Texture2D.h
+        src/Render/Sprite2D.cpp
+        src/Render/Sprite2D.h
+        src/Render/MultiTexture2D.cpp
+        src/Render/MultiTexture2D.h
+        src/Render/SubTexture2D.cpp
+        src/Render/SubTexture2D.h
+        src/Render/Object2D.cpp
+        src/Render/Object2D.h
+        src/Render/SpriteAnimator.cpp
+        src/Render/SpriteAnimator.h
         src/Game/Game.cpp
         src/Game/Game.h
-        src/Core/BufferObjects.cpp
-        src/Core/BufferObjects.h
-        src/Core/Render.cpp
-        src/Core/Render.h
-        src/Core/TextRender.cpp
-        src/Core/TextRender.h
-        src/Core/Font.cpp
-        src/Core/Font.h
+        src/Render/BufferObjects.cpp
+        src/Render/BufferObjects.h
+        src/Render/Render.cpp
+        src/Render/Render.h
+        src/Render/TextRender.cpp
+        src/Render/TextRender.h
+        src/Render/Font.cpp
+        src/Render/Font.h
         src/Core/Button.cpp
         src/Core/Button.h
         src/Core/Event.h
         src/Core/Menu.cpp
         src/Core/Menu.h
-        src/Core/Application.cpp
-        src/Core/Application.h
+        src/Application.cpp
+        src/Application.h
         src/Core/EventSystem.h
         src/Core/Subscriber.h
         src/Core/EventManager.cpp
@@ -60,7 +60,7 @@ add_executable(${PROJECT_NAME} test1.cpp
         src/Core/Utilities.h
        # greko/greko.cpp
        # greko/greko.h
-        src/Game/Level.cpp src/Game/Level.h src/Game/Figure.cpp src/Game/Figure.h)
+        src/Game/Level.cpp src/Game/Level.h src/Game/Figure.cpp src/Game/Figure.h src/Core/Label.cpp src/Core/Label.h)
 
 target_link_libraries(${PROJECT_NAME} glfw glm libopengl32.a glew32.lib freetype.lib greko )
 #target_link_libraries(${PROJECT_NAME} glfw glm libGL.so libGLEW.so libfreetype.so greko)

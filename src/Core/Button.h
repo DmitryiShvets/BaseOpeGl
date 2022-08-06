@@ -6,13 +6,13 @@
 #define BASEOPEGL_BUTTON_H
 
 #include "ResourceManager.h"
-#include "BufferObjects.h"
+#include "../Render/BufferObjects.h"
 #include <glm/vec2.hpp>
 #include "Event.h"
 #include "EventManager.h"
 #include "Subscriber.h"
 
-class Menu;
+//class Menu;
 
 class Button : public Subscriber, Object2D {
 public:
@@ -24,7 +24,7 @@ public:
 
     void onMouseBtnPressed(int button, double x, double y);
 
-    ~Button();
+    ~Button() override;
 
     void update(Event *e) override;
 

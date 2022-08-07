@@ -3,9 +3,7 @@
 //
 
 #include "Application.h"
-//#include "glm/gtc/matrix_transform.hpp"
 
-//#include "greko.h"
 #include <iostream>
 #include <utility>
 #include <chrono>
@@ -17,7 +15,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "Core/Label.h"
 
 Application::Application(std::string name, int width, int height) : name(std::move(name)), width(width),
                                                                     height(height) {}
@@ -49,6 +46,8 @@ void Application::init() {
         exit(EXIT_FAILURE);
     }
 
+    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
+
 
     glfwMakeContextCurrent(window);
 
@@ -72,12 +71,27 @@ void Application::init() {
     game->init();
 
     menu = &Menu::getInstance();
-    menu->btn1.onClick += Core::EventHandler::Bind([this] { if (mGamePaused)close(); });
-    menu->btn2.onClick += Core::EventHandler::Bind([this] { mGamePlay = !mGamePlay; });
+    menu->dialogWindow.btnNewGameWhite.onClick += Core::EventHandler::Bind([this] {
+        label->setDisabled();
+        game->newGame(0);
+        mGamePaused = false;
+        mGamePlay = true;
+    });
+
+    menu->dialogWindow.btnNewGameBlack.onClick += Core::EventHandler::Bind([this] {
+        label->setDisabled();
+        game->newGame(1);
+        mGamePaused = false;
+        mGamePlay = true;
+    });
+    menu->btn2.onClick += Core::EventHandler::Bind([this] { if (mGamePaused)close(); });
 
 
     EventManager::getInstance().subscribe(Event::EventType::KEY_PRESSED_EVENT, this);
     EventManager::getInstance().subscribe(Event::EventType::GAME_END_EVENT, this);
+
+    label = new Label(glm::vec2(300, 700), glm::vec2(300, 100), glm::vec3(0.2f, 0.3f, 0.3f));
+
 }
 
 void Application::start() {
@@ -92,7 +106,7 @@ void Application::start() {
 
     Renderer::setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-   // Label label(glm::vec2(50, 0), glm::vec2(100, 50), glm::vec3(1.0f, 1.0f, 1.0f), L"S");
+    // Label label(glm::vec2(50, 0), glm::vec2(100, 50), glm::vec3(1.0f, 1.0f, 1.0f), L"S");
     // Game loop
     while (!glfwWindowShouldClose(window)) {
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
@@ -114,7 +128,8 @@ void Application::start() {
 
         if (mGamePaused) menu->render();
 
-     //   label.render();
+        label->render();
+
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -140,24 +155,42 @@ void Application::close() {
 Application::~Application() {
 
 
-    menu->btn1.onClick -= Core::EventHandler::Bind([this] { if (mGamePaused)close(); });
-    menu->btn2.onClick -= Core::EventHandler::Bind([this] { mGamePlay = !mGamePlay; });
+    menu->dialogWindow.btnNewGameWhite.onClick -= Core::EventHandler::Bind([this] {
+        label->setDisabled();
+        game->newGame(0);
+        mGamePaused = false;
+        mGamePlay = true;
+    });
+
+    menu->dialogWindow.btnNewGameBlack.onClick -= Core::EventHandler::Bind([this] {
+        label->setDisabled();
+        game->newGame(1);
+        mGamePaused = false;
+        mGamePlay = true;
+    });
+    menu->btn2.onClick -= Core::EventHandler::Bind([this] { if (mGamePaused)close(); });
 
 
     EventManager::getInstance().unsubscribe(Event::EventType::KEY_PRESSED_EVENT, this);
     EventManager::getInstance().unsubscribe(Event::EventType::GAME_END_EVENT, this);
+
+    delete label;
 }
 
 void Application::update(Event *e) {
     if (e->getType() == Event::EventType::KEY_PRESSED_EVENT) {
         auto *event = dynamic_cast<KeyPressedEvent * >(e);
-        if (event->key == 257)mGamePaused = !mGamePaused;
+        if (event->key == 257) {
+            mGamePaused = !mGamePaused;
+            GamePausedEvent ev(mGamePaused);
+            EventManager::eventRoute(&ev);
+        }
 
     }
     if (e->getType() == Event::EventType::GAME_END_EVENT) {
         auto *event = dynamic_cast<GameEndEvent * >(e);
-        mGamePlay = false;
-
+        label->changeText(std::wstring(event->comment.begin(), event->comment.end()));
+        label->setEnabled();
     }
 }
 

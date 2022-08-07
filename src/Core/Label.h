@@ -21,6 +21,12 @@ public:
 
     Label &operator=(Label &&other) noexcept;
 
+    void changeText(std::wstring text);
+
+    inline void setEnabled() { mActive = true; }
+
+    inline void setDisabled() {mActive = false; }
+
     Label(Label &&other) noexcept;
 
     void render();
@@ -28,6 +34,7 @@ public:
     ~Label();
 
 private:
+    bool mActive = true;
     std::wstring mContent;
     glm::vec3 mColor;
     VAO *mVAO = &ResourceManager::getInstance().baseVAO;

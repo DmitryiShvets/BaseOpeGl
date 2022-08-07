@@ -23,7 +23,8 @@ public:
         NODE_SELECTED_EVENT,
         NODE_UNSELECTED_EVENT,
         MOVE_FIGURE_EVENT,
-        GAME_END_EVENT
+        GAME_END_EVENT,
+        GAME_PAUSED_EVENT
     };
 protected:
     EventType type;
@@ -116,6 +117,16 @@ public:
 
     std::string result;
     std::string comment;
+
+};
+
+class GamePausedEvent : public Event {
+public:
+    GamePausedEvent(bool status) : Event("Move Figure Event", Event::EventType::GAME_PAUSED_EVENT), status(status) {}
+
+    ~GamePausedEvent() override = default;
+
+    bool status;
 
 };
 

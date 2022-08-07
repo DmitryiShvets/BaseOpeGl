@@ -5,7 +5,7 @@ project(${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 20)
 
 #find_package( OpenGL REQUIRED )
-include_directories( greko/include )
+include_directories(greko/include)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -58,11 +58,18 @@ add_executable(${PROJECT_NAME} test1.cpp
         src/Game/SquareNode.h
         src/Core/Utilities.cpp
         src/Core/Utilities.h
-       # greko/greko.cpp
-       # greko/greko.h
-        src/Game/Level.cpp src/Game/Level.h src/Game/Figure.cpp src/Game/Figure.h src/Core/Label.cpp src/Core/Label.h)
+        # greko/greko.cpp
+        # greko/greko.h
+        src/Game/Level.cpp
+        src/Game/Level.h
+        src/Game/Figure.cpp
+        src/Game/Figure.h
+        src/Core/Label.cpp
+        src/Core/Label.h
+        src/Core/DialogWindow.cpp
+        src/Core/DialogWindow.h)
 
-target_link_libraries(${PROJECT_NAME} glfw glm libopengl32.a glew32.lib freetype.lib greko )
+target_link_libraries(${PROJECT_NAME} glfw glm libopengl32.a glew32.lib freetype.lib greko)
 #target_link_libraries(${PROJECT_NAME} glfw glm libGL.so libGLEW.so libfreetype.so greko)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)

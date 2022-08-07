@@ -16,7 +16,7 @@
 
 class Button : public Subscriber, Object2D {
 public:
-    Button(const std::wstring &content, const glm::vec2 &position, const glm::vec2 &size);
+    Button(std::wstring content, const glm::vec2 &position, const glm::vec2 &size);
 
     void render();
 
@@ -28,7 +28,16 @@ public:
 
     void update(Event *e) override;
 
+    inline void setEnabled() { mActive = true; }
+
+    inline void setDisabled() {mActive = false; }
+
 private:
+    bool mActive = true;
+    bool mHover = false;
+    glm::vec3 mColor;
+    glm::vec3 mDefaultColor;
+
     //   glm::vec2 mPos;
     //   glm::vec2 mSize;
     VAO *mVAO = &ResourceManager::getInstance().baseVAO;

@@ -28,6 +28,8 @@ public:
 
     void destroy();
 
+    void newGame(int side);
+
     Sprite2D &getSprite(const std::string &textureName);
 
 private:

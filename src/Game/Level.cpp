@@ -8,7 +8,7 @@
 #include <thread>
 
 
-Level::Level() {
+Level::Level(int playerColor) {
     ChessFraction side;
     std::string name;
     double y;
@@ -24,7 +24,9 @@ Level::Level() {
         if (i == 6)name = "g";
         if (i == 7)name = "h";
         for (int j = 0; j < 8; ++j) {
-            std::string nowName = name + std::to_string(j + 1);
+            std::string nowName;
+            if (playerColor == 0) nowName = name + std::to_string(j + 1);
+            if (playerColor == 1) nowName = name + std::to_string(8 - j);
             y = 50.0f + (100.0f * j);
             if (i % 2 == 0) {
                 side = ChessFraction::WHITE;
@@ -46,13 +48,13 @@ Level::Level() {
 
         if (j == 2) {
             suffix = 1;
-            color = 0;
             index = 2;
+            color = 0;
         }
         if (j == 3) {
             suffix = 8;
-            color = 1;
             index = 7;
+            color = 1;
         }
 
         for (int i = 0; i < 8; ++i) {
@@ -110,8 +112,11 @@ Level::Level() {
 
         mLabels.emplace_back(glm::vec2(xPos, 20), glm::vec2(100, 30), background, std::wstring(name.begin(), name.end()));
         mLabels.emplace_back(glm::vec2(xPos, 850), glm::vec2(100, 30), background, std::wstring(name.begin(), name.end()));
-        mLabels.emplace_back(glm::vec2(20, yPos), glm::vec2(30, 100), background, std::to_wstring(i+1));
-        mLabels.emplace_back(glm::vec2(850, yPos), glm::vec2(30, 100), background, std::to_wstring(8-(i)));
+        int n;
+        if (playerColor == 0)n = i + 1;
+        if (playerColor == 1)n = 8 - i;
+        mLabels.emplace_back(glm::vec2(20, yPos), glm::vec2(30, 100), background, std::to_wstring(n));
+        mLabels.emplace_back(glm::vec2(850, yPos), glm::vec2(30, 100), background, std::to_wstring(n));
 
         xPos += 100;
         yPos += 100;
@@ -119,7 +124,8 @@ Level::Level() {
     EventManager::getInstance().subscribe(Event::EventType::NODE_SELECTED_EVENT, this);
     EventManager::getInstance().subscribe(Event::EventType::MOVE_FIGURE_EVENT, this);
 
-    greko.init(WHITE);
+    if (playerColor == 0) greko.init(WHITE);
+    if (playerColor == 1) greko.init(BLACK);
 
 
 }

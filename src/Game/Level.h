@@ -14,7 +14,7 @@
 class Level : Subscriber {
 public:
 
-    Level();
+    Level(int side);
 
     void move(const std::string &source, const std::string &dist);
 

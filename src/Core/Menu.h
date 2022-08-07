@@ -7,6 +7,9 @@
 
 #include "Button.h"
 #include "Event.h"
+#include "Label.h"
+#include "DialogWindow.h"
+
 
 class Menu {
 public:
@@ -19,7 +22,12 @@ public:
 
     Button btn1;
     Button btn2;
+    DialogWindow dialogWindow;
+
 private:
+
+    bool mActive = true;
+    Label background;
 
     Menu(int width, int height);
 

@@ -38,6 +38,8 @@ public:
 
     void update(Event *e) override;
 
+    bool mGamePaused = true;
+
 
 private:
     Application(std::string name, int width, int height);
@@ -51,9 +53,9 @@ private:
     Game *game = nullptr;
     Menu *menu = nullptr;
 
+    Label *label = nullptr;
 
-    bool mGamePaused = false;
-    bool mGamePlay = true;
+    bool mGamePlay = false;
 
 
 };

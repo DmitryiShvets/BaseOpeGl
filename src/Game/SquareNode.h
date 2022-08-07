@@ -49,8 +49,9 @@ private:
     glm::vec3 mColor;
     glm::vec3 mDefaultColor;
 
-    ChessFraction mFraction;
 
+    ChessFraction mFraction;
+    bool mActive = true;
     bool mHover = false;
     bool mSelected = false;
 

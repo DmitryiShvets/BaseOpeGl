@@ -25,9 +25,7 @@ void Game::init() {
     mVecSpriteAnimators.emplace_back(&getSprite("defaultSprite"), 1, 3, true);
 
 
-
-
-    mLvl = new Level();
+    //  mLvl = new Level();
 
 }
 
@@ -37,7 +35,7 @@ void Game::render() {
 //    }
 
 
-  mLvl->render();
+    if (mLvl)mLvl->render();
 
 }
 
@@ -69,6 +67,12 @@ void Game::destroy() {
     mVecSpriteAnimators.clear();
 
     delete mLvl;
+}
+
+void Game::newGame(int side) {
+    delete mLvl;
+    mLvl = new Level(side);
+    //  mLvl.g
 }
 
 

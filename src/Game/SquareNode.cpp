@@ -51,31 +51,38 @@ SquareNode::SquareNode(const std::string &name, const glm::vec2 &position, Chess
     EventManager::getInstance().subscribe(Event::EventType::MOUSE_MOVED_EVENT, this);
     EventManager::getInstance().subscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, this);
     EventManager::getInstance().subscribe(Event::EventType::NODE_UNSELECTED_EVENT, this);
+    EventManager::getInstance().subscribe(Event::EventType::GAME_PAUSED_EVENT, this);
 }
 
 void SquareNode::update(Event *e) {
-    if (e->getType() == Event::EventType::MOUSE_MOVED_EVENT) {
-        auto *event = dynamic_cast<MouseMovedEvent * >(e);
-        if (isPointOn(event->x, event->y)) mHover = true;
-        else mHover = false;
+    if (e->getType() == Event::EventType::GAME_PAUSED_EVENT) {
+        auto *event = dynamic_cast<GamePausedEvent * >(e);
+        mActive = !event->status;
     }
-    if (e->getType() == Event::EventType::MOUSE_BUTTON_PRESSED_EVENT) {
-        auto *event = dynamic_cast<MouseButtonPressedEvent * >(e);
-        if (isPointOn(event->x, event->y)) {
-            mSelected = true;
-            mSelectedNode = this->mNodeName;
-            NodeSelectedEvent ev(mNodeName);
-            EventManager::eventRoute(&ev);
-
-        } else {
-            mSelected = false;
-            mSelectedNode.clear();
+    if (mActive) {
+        if (e->getType() == Event::EventType::MOUSE_MOVED_EVENT) {
+            auto *event = dynamic_cast<MouseMovedEvent * >(e);
+            if (isPointOn(event->x, event->y)) mHover = true;
+            else mHover = false;
         }
+        if (e->getType() == Event::EventType::MOUSE_BUTTON_PRESSED_EVENT) {
+            auto *event = dynamic_cast<MouseButtonPressedEvent * >(e);
+            if (isPointOn(event->x, event->y)) {
+                mSelected = true;
+                mSelectedNode = this->mNodeName;
+                NodeSelectedEvent ev(mNodeName);
+                EventManager::eventRoute(&ev);
 
-    }
-    if (e->getType() == Event::EventType::NODE_UNSELECTED_EVENT) {
-        auto *event = dynamic_cast<NodeUnselectedEvent * >(e);
-        if (event->nodeName == mNodeName)mSelected = false;
+            } else {
+                mSelected = false;
+                mSelectedNode.clear();
+            }
+
+        }
+        if (e->getType() == Event::EventType::NODE_UNSELECTED_EVENT) {
+            auto *event = dynamic_cast<NodeUnselectedEvent * >(e);
+            if (event->nodeName == mNodeName)mSelected = false;
+        }
     }
 
 }
@@ -84,6 +91,7 @@ SquareNode::~SquareNode() {
     EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_MOVED_EVENT, this);
     EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, this);
     EventManager::getInstance().unsubscribe(Event::EventType::NODE_UNSELECTED_EVENT, this);
+    EventManager::getInstance().unsubscribe(Event::EventType::GAME_PAUSED_EVENT, this);
     if (mFigure) delete mFigure;
 }
 
@@ -97,6 +105,7 @@ SquareNode &SquareNode::operator=(SquareNode &&node) noexcept {
         mNodeName = node.mNodeName;
         mFigure = node.mFigure;
         mSelectedNode = node.mSelectedNode;
+        mActive = node.mActive;
 
         mProgram = node.mProgram;
         mVAO = node.mVAO;
@@ -108,10 +117,12 @@ SquareNode &SquareNode::operator=(SquareNode &&node) noexcept {
         EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_MOVED_EVENT, &node);
         EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, &node);
         EventManager::getInstance().unsubscribe(Event::EventType::NODE_UNSELECTED_EVENT, this);
+        EventManager::getInstance().unsubscribe(Event::EventType::GAME_PAUSED_EVENT, this);
 
         EventManager::getInstance().subscribe(Event::EventType::MOUSE_MOVED_EVENT, this);
         EventManager::getInstance().subscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, this);
         EventManager::getInstance().subscribe(Event::EventType::NODE_UNSELECTED_EVENT, this);
+        EventManager::getInstance().subscribe(Event::EventType::GAME_PAUSED_EVENT, this);
     }
     return *this;
 }
@@ -125,6 +136,7 @@ SquareNode::SquareNode(SquareNode &&node) noexcept: Object2D(std::move(node)) {
     mNodeName = node.mNodeName;
     mFigure = node.mFigure;
     mSelectedNode = node.mSelectedNode;
+    mActive = node.mActive;
 
     mProgram = node.mProgram;
     mVAO = node.mVAO;
@@ -136,10 +148,12 @@ SquareNode::SquareNode(SquareNode &&node) noexcept: Object2D(std::move(node)) {
     EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_MOVED_EVENT, &node);
     EventManager::getInstance().unsubscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, &node);
     EventManager::getInstance().unsubscribe(Event::EventType::NODE_UNSELECTED_EVENT, this);
+    EventManager::getInstance().unsubscribe(Event::EventType::GAME_PAUSED_EVENT, this);
 
     EventManager::getInstance().subscribe(Event::EventType::MOUSE_MOVED_EVENT, this);
     EventManager::getInstance().subscribe(Event::EventType::MOUSE_BUTTON_PRESSED_EVENT, this);
     EventManager::getInstance().subscribe(Event::EventType::NODE_UNSELECTED_EVENT, this);
+    EventManager::getInstance().subscribe(Event::EventType::GAME_PAUSED_EVENT, this);
 }
 
 void SquareNode::setFigure(Figure::FigureType type, int side) {

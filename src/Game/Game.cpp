@@ -17,23 +17,9 @@ void Game::init() {
     resourceManager->getProgram("defaultSprite").setUniform("projectionMatrix", projectionMatrix);
     glUseProgram(0);
 
-    mSprites.emplace("defaultSprite", Sprite2D(glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0,
-                                               &resourceManager->getMultiTexture("defaultSprite"),
-                                               &resourceManager->getProgram("defaultSprite"), 1));
-
-
-    mVecSpriteAnimators.emplace_back(&getSprite("defaultSprite"), 1, 3, true);
-
-
-    //  mLvl = new Level();
-
 }
 
 void Game::render() {
-//    for (auto &mVecSprite: mSprites) {
-//        mVecSprite.second.render();
-//    }
-
 
     if (mLvl)mLvl->render();
 

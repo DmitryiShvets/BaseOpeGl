@@ -28,34 +28,28 @@ ResourceManager::~ResourceManager() {
 
 void ResourceManager::init() {
 
-    shaderPrograms.emplace("default", ShaderProgram(readFile("res/defaultVER.glsl"), readFile("res/defaultFRG.glsl")));
-    shaderPrograms.emplace("defaultSprite", ShaderProgram(readFile("res/defaultSpriteVER.glsl"), readFile("res/defaultSpriteFRG.glsl")));
-    shaderPrograms.emplace("defaultText", ShaderProgram(readFile("res/textVER.glsl"), readFile("res/textFRG.glsl")));
-    shaderPrograms.emplace("defaultControl", ShaderProgram(readFile("res/controlVER.glsl"), readFile("res/controlFRG.glsl")));
+    shaderPrograms.emplace("default", ShaderProgram(readFile("res/shaders/defaultVER.glsl"), readFile("res/shaders/defaultFRG.glsl")));
+    shaderPrograms.emplace("defaultSprite", ShaderProgram(readFile("res/shaders/defaultSpriteVER.glsl"), readFile("res/shaders/defaultSpriteFRG.glsl")));
+    shaderPrograms.emplace("defaultText", ShaderProgram(readFile("res/shaders/textVER.glsl"), readFile("res/shaders/textFRG.glsl")));
+    shaderPrograms.emplace("defaultControl", ShaderProgram(readFile("res/shaders/controlVER.glsl"), readFile("res/shaders/controlFRG.glsl")));
 
 
-    textures.emplace("default", Texture2D("res/awesomeface.png"));
-    textures.emplace("defaultSprite", Texture2D("res/image.png"));
+    textures.emplace("default", Texture2D("res/textures/awesomeface.png"));
+    textures.emplace("defaultSprite", Texture2D("res/textures/image.png"));
 
-    textures.emplace("b_bishop", Texture2D("res/b_bishop_png_shadow_128px.png"));
-    textures.emplace("b_king", Texture2D("res/b_king_png_shadow_128px.png"));
-    textures.emplace("b_knight", Texture2D("res/b_knight_png_shadow_128px.png"));
-    textures.emplace("b_pawn", Texture2D("res/b_pawn_png_shadow_128px.png"));
-    textures.emplace("b_queen", Texture2D("res/b_queen_png_shadow_128px.png"));
-    textures.emplace("b_rook", Texture2D("res/b_rook_png_shadow_128px.png"));
+    textures.emplace("b_bishop", Texture2D("res/textures/b_bishop_png_shadow_128px.png"));
+    textures.emplace("b_king", Texture2D("res/textures/b_king_png_shadow_128px.png"));
+    textures.emplace("b_knight", Texture2D("res/textures/b_knight_png_shadow_128px.png"));
+    textures.emplace("b_pawn", Texture2D("res/textures/b_pawn_png_shadow_128px.png"));
+    textures.emplace("b_queen", Texture2D("res/textures/b_queen_png_shadow_128px.png"));
+    textures.emplace("b_rook", Texture2D("res/textures/b_rook_png_shadow_128px.png"));
 
-    textures.emplace("fon_light", Texture2D("res/square_gray_light_png_shadow_128px.png"));
-    textures.emplace("fon_dark", Texture2D("res/square_gray_dark_png_shadow_128px.png"));
-
-    textures.emplace("w_bishop", Texture2D("res/w_bishop_png_shadow_128px.png"));
-    textures.emplace("w_king", Texture2D("res/w_king_png_shadow_128px.png"));
-    textures.emplace("w_knight", Texture2D("res/w_knight_png_shadow_128px.png"));
-    textures.emplace("w_pawn", Texture2D("res/w_pawn_png_shadow_128px.png"));
-    textures.emplace("w_queen", Texture2D("res/w_queen_png_shadow_128px.png"));
-    textures.emplace("w_rook", Texture2D("res/w_rook_png_shadow_128px.png"));
-
-    mMulTextures.emplace("defaultSprite", MultiTexture2D("res/atlas.png", {1, 2, 3, 4, 5}, 200, 150));
-
+       textures.emplace("w_bishop", Texture2D("res/textures/w_bishop_png_shadow_128px.png"));
+    textures.emplace("w_king", Texture2D("res/textures/w_king_png_shadow_128px.png"));
+    textures.emplace("w_knight", Texture2D("res/textures/w_knight_png_shadow_128px.png"));
+    textures.emplace("w_pawn", Texture2D("res/textures/w_pawn_png_shadow_128px.png"));
+    textures.emplace("w_queen", Texture2D("res/textures/w_queen_png_shadow_128px.png"));
+    textures.emplace("w_rook", Texture2D("res/textures/w_rook_png_shadow_128px.png"));
 
     mFonts.emplace("Open-Sans", Font("res/fonts/OpenSans-Bold.ttf"));
 
